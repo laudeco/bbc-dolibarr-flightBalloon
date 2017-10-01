@@ -46,14 +46,14 @@ if (! $res && file_exists("../../../../dolibarr/htdocs/main.inc.php")) $res=@inc
 if (! $res && file_exists("../../../../../dolibarr/htdocs/main.inc.php")) $res=@include("../../../../../dolibarr/htdocs/main.inc.php");   // Used on dev env only
 if (! $res) die("Include of main fails");
 // Change this following line to use the correct relative path from htdocs (do not remove DOL_DOCUMENT_ROOT)
-require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightBalloon/bbc_ballons.class.php");
-require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightBalloon/bbc_baskets.class.php");
-require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightBalloon/bbc_burners_sn.class.php");
-require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightBalloon/bbc_burners.class.php");
-require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightBalloon/bbc_compositions.class.php");
-require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightBalloon/bbc_enveloppes.class.php");
-require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightBalloon/bbc_fuels.class.php");
-require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightBalloon/bbc_instruments.class.php");
+require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightballoon/bbc_ballons.class.php");
+require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightballoon/bbc_baskets.class.php");
+require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightballoon/bbc_burners_sn.class.php");
+require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightballoon/bbc_burners.class.php");
+require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightballoon/bbc_compositions.class.php");
+require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightballoon/bbc_enveloppes.class.php");
+require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightballoon/bbc_fuels.class.php");
+require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightballoon/bbc_instruments.class.php");
 
 // Load traductions files requiredby by page
 $langs->load("companies");
@@ -67,7 +67,7 @@ if ($user->societe_id  > 0)
 {
 	//accessforbidden();
 }
-if(!$user->rights->flightBalloon->bal->add){
+if(!$user->rights->flightballoon->bal->add){
 	accessforbidden();
 }
 
@@ -80,8 +80,8 @@ if(!$user->rights->flightBalloon->bal->add){
 $msg = ''; // init de la variable de messages
 $error = 0;
 /*
- * type du formulaire à afficher
- * ce type correspond aux types présent dans la table "bbc_types_pieces"
+ * type du formulaire ï¿½ afficher
+ * ce type correspond aux types prï¿½sent dans la table "bbc_types_pieces"
  * 1 = Enveloppe
  * 2 = bruleurs
  * 3 = nacelle
@@ -95,7 +95,7 @@ if ($_GET["action"] == 'add' || $_POST["action"] == 'add')
 	$formType = $_POST['typePiece'];
 	if (! $_POST["cancel"]){
 		/*
-		 * Commun à tous
+		 * Commun ï¿½ tous
 		 */
 		$manufacturer = trim($_POST['manufacturer']); //manufacturer
 		$model = trim($_POST['model']);//model
@@ -223,7 +223,7 @@ if ($_GET["action"] == 'add' || $_POST["action"] == 'add')
 	}
 }
 
-$formType = 1; // 1 par défaut
+$formType = 1; // 1 par dï¿½faut
 if ($_GET["mode"] == 'SELECT')
 {
 	$formType = $_GET['typePiece'];
@@ -242,7 +242,7 @@ if($msg){
 	print $msg;
 }
 $form=new Form($db);
-//onglet du dessus pour choisir le type de pièce à ajouter
+//onglet du dessus pour choisir le type de piï¿½ce ï¿½ ajouter
 print '<!-- debut cartouche rapport -->
 <div class="tabs">
 <a id="active" class="tab">Carnet de vol</a>
@@ -257,7 +257,7 @@ print'</td></tr>';
 print '<tr><td colspan="2" align="center"><input type="submit" class="button" name="submit" value="Rafraichir"></td></tr></table>';
 print '</form></div>';
 /*
- * En fonction du type de la piece à ajouter, choix du formulaire
+ * En fonction du type de la piece ï¿½ ajouter, choix du formulaire
  * START
  */
 $html = new Form($db);
@@ -348,7 +348,7 @@ print '<input class="button" type="submit" name="cancel" value="'.$langs->trans(
 
 print '</form>';
 /*
- * En fonction du type de la piece à ajouter, choix du formulaire
+ * En fonction du type de la piece ï¿½ ajouter, choix du formulaire
  * FINISH
  */
 /***************************************************

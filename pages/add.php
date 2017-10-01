@@ -46,7 +46,7 @@ if (! $res && file_exists("../../../../dolibarr/htdocs/main.inc.php")) $res=@inc
 if (! $res && file_exists("../../../../../dolibarr/htdocs/main.inc.php")) $res=@include("../../../../../dolibarr/htdocs/main.inc.php");   // Used on dev env only
 if (! $res) die("Include of main fails");
 // Change this following line to use the correct relative path from htdocs (do not remove DOL_DOCUMENT_ROOT)
-require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightBalloon/bbc_ballons.class.php");
+require_once(DOL_DOCUMENT_ROOT."/../htdocs/flightballoon/bbc_ballons.class.php");
 
 // Load traductions files requiredby by page
 $langs->load("companies");
@@ -60,7 +60,7 @@ if ($user->societe_id  > 0)
 {
 	//accessforbidden();
 }
-if(!$user->rights->flightBalloon->bal->add){
+if(!$user->rights->flightballoon->bal->add){
 	accessforbidden();
 }
 
