@@ -55,7 +55,7 @@ include_once(DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php');
 dol_include_once('/hello/class/llx_bbc_ballons.class.php');
 
 // Load traductions files requiredby by page
-$langs->loadLangs(array("hello","other"));
+$langs->loadLangs(array("fli","other"));
 
 // Get parameters
 $id			= GETPOST('id', 'int');

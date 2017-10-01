@@ -52,7 +52,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 dol_include_once('/flightballoon/class/bbc_ballons.class.php');
 
 // Load traductions files requiredby by page
-$langs->loadLangs(array("flightballoon","other"));
+$langs->loadLangs(array("mymodule@flightballoon","other"));
 
 $action     = GETPOST('action','alpha');
 $massaction = GETPOST('massaction','alpha');
