@@ -79,10 +79,9 @@ $pagenext = $page + 1;
 // Initialize technical objects
 $object=new Bbc_ballons($db);
 $extrafields = new ExtraFields($db);
-$diroutputmassaction=$conf->hello->dir_output . '/temp/massgeneration/'.$user->id;
-$hookmanager->initHooks(array('llx_bbc_ballonslist'));     // Note that conf->hooks_modules contains array
+
 // Fetch optionals attributes and labels
-$extralabels = $extrafields->fetch_name_optionals_label('llx_bbc_ballons');
+$extralabels = $extrafields->fetch_name_optionals_label('bbc_balloon');
 $search_array_options=$extrafields->getOptionalsFromPost($extralabels,'','search_');
 
 // Default sort order (if not yet defined by previous GETPOST)
@@ -140,42 +139,6 @@ if (is_array($extrafields->attribute_label) && count($extrafields->attribute_lab
 if (GETPOST('cancel')) { $action='list'; $massaction=''; }
 if (! GETPOST('confirmmassaction') && $massaction != 'presend' && $massaction != 'confirm_presend') { $massaction=''; }
 
-$parameters=array();
-$reshook=$hookmanager->executeHooks('doActions',$parameters,$object,$action);    // Note that $action and $object may have been modified by some hooks
-if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
-
-if (empty($reshook))
-{
-    // Selection of new fields
-    include DOL_DOCUMENT_ROOT.'/core/actions_changeselectedfields.inc.php';
-
-    // Purge search criteria
-    if (GETPOST('button_removefilter_x','alpha') || GETPOST('button_removefilter.x','alpha') ||GETPOST('button_removefilter','alpha')) // All tests are required to be compatible with all browsers
-    {
-        foreach($object->fields as $key => $val)
-        {
-            $search[$key]='';
-        }
-        $toselect='';
-        $search_array_options=array();
-    }
-    if (GETPOST('button_removefilter_x','alpha') || GETPOST('button_removefilter.x','alpha') || GETPOST('button_removefilter','alpha')
-        || GETPOST('button_search_x','alpha') || GETPOST('button_search.x','alpha') || GETPOST('button_search','alpha'))
-    {
-        $massaction='';     // Protection to avoid mass action if we force a new search during a mass action confirmation
-    }
-
-    // Mass actions
-    $objectclass='llx_bbc_ballons';
-    $objectlabel='llx_bbc_ballons';
-    $permtoread = $user->rights->hello->read;
-    $permtodelete = $user->rights->hello->delete;
-    $uploaddir = $conf->hello->dir_output;
-    include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
-}
-
-
-
 /*
  * VIEW
  *
@@ -186,9 +149,8 @@ $form=new Form($db);
 
 $now=dol_now();
 
-//$help_url="EN:Module_llx_bbc_ballons|FR:Module_llx_bbc_ballons_FR|ES:Módulo_llx_bbc_ballons";
 $help_url='';
-$title = $langs->trans('ListOf', $langs->transnoentitiesnoconv("llx_bbc_ballonss"));
+$title = $langs->trans('ListOf', $langs->transnoentitiesnoconv("ballons"));
 
 
 // Build and execute select
@@ -232,21 +194,7 @@ $parameters=array();
 $reshook=$hookmanager->executeHooks('printFieldListWhere',$parameters);    // Note that $action and $object may have been modified by hook
 $sql.=$hookmanager->resPrint;
 
-/* If a group by is required
-$sql.= " GROUP BY "
-foreach($object->fields as $key => $val)
-{
-    $sql.='t.'.$key.', ';
-}
-// Add fields from extrafields
-foreach ($extrafields->attribute_label as $key => $val) $sql.=($extrafields->attribute_type[$key] != 'separate' ? ",ef.".$key : '');
-// Add where from hooks
-$parameters=array();
-$reshook=$hookmanager->executeHooks('printFieldListGroupBy',$parameters);    // Note that $action and $object may have been modified by hook
-$sql.=$hookmanager->resPrint;
-*/
-
-//$sql.=$db->order($sortfield,$sortorder);
+$sql.=$db->order($sortfield,$sortorder);
 
 // Count total nb of records
 $nbtotalofrecords = '';
@@ -272,8 +220,7 @@ $num = $db->num_rows($resql);
 if ($num == 1 && ! empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $search_all)
 {
     $obj = $db->fetch_object($resql);
-    $id = $obj->rowid;
-    header("Location: ".DOL_URL_ROOT.'/hello/llx_bbc_ballons_card.php?id='.$id);
+    header("Location: ".DOL_URL_ROOT.'/flightballoon/balloon_card.php?id='.$obj->id);
     exit;
 }
 
@@ -282,21 +229,6 @@ if ($num == 1 && ! empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && 
 // --------------------------------------------------------------------
 
 llxHeader('', $title, $help_url);
-
-// Example : Adding jquery code
-print '<script type="text/javascript" language="javascript">
-jQuery(document).ready(function() {
-	function init_myfunc()
-	{
-		jQuery("#myid").removeAttr(\'disabled\');
-		jQuery("#myid").attr(\'disabled\',\'disabled\');
-	}
-	init_myfunc();
-	jQuery("#mybutton").click(function() {
-		init_myfunc();
-	});
-});
-</script>';
 
 $arrayofselected=is_array($toselect)?$toselect:array();
 
@@ -342,22 +274,10 @@ if ($sall)
     print $langs->trans("FilterOnInto", $sall) . join(', ',$fieldstosearchall);
 }
 
-$moreforfilter = '';
-$moreforfilter.='<div class="divsearchfield">';
-$moreforfilter.= $langs->trans('MyFilter') . ': <input type="text" name="search_myfield" value="'.dol_escape_htmltag($search_myfield).'">';
-$moreforfilter.= '</div>';
-
 $parameters=array();
 $reshook=$hookmanager->executeHooks('printFieldPreListTitle',$parameters);    // Note that $action and $object may have been modified by hook
 if (empty($reshook)) $moreforfilter .= $hookmanager->resPrint;
 else $moreforfilter = $hookmanager->resPrint;
-
-if (! empty($moreforfilter))
-{
-	print '<div class="liste_titre liste_titre_bydiv centpercent">';
-	print $moreforfilter;
-    print '</div>';
-}
 
 $varpage=empty($contextpage)?$_SERVER["PHP_SELF"]:$contextpage;
 $selectedfields=$form->multiSelectArrayWithCheckbox('selectedfields', $arrayfields, $varpage);	// This also change content of $arrayfields
@@ -620,29 +540,6 @@ print '</table>'."\n";
 print '</div>'."\n";
 
 print '</form>'."\n";
-
-if ($nbtotalofrecords === '' || $nbtotalofrecords)
-{
-    if ($massaction == 'builddoc' || $action == 'remove_file' || $show_files)
-    {
-        require_once(DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php');
-        $formfile = new FormFile($db);
-
-        // Show list of available documents
-        $urlsource=$_SERVER['PHP_SELF'].'?sortfield='.$sortfield.'&sortorder='.$sortorder;
-        $urlsource.=str_replace('&amp;','&',$param);
-
-        $filedir=$diroutputmassaction;
-        $genallowed=$user->rights->hello->read;
-        $delallowed=$user->rights->hello->read;
-
-        print $formfile->showdocuments('massfilesarea_hello','',$filedir,$urlsource,0,$delallowed,'',1,1,0,48,1,$param,$title,'');
-    }
-    else
-    {
-        print '<br><a name="show_files"></a><a href="'.$_SERVER["PHP_SELF"].'?show_files=1'.$param.'#show_files">'.$langs->trans("ShowTempMassFilesArea").'</a>';
-    }
-}
 
 // End of page
 llxFooter();
