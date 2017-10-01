@@ -17,12 +17,12 @@
  */
 
 /**
- *      \file       dev/skeletons/skeleton_class.class.php
+ *      \file       dev/skeletons/bbc_ballons.class.php
  *      \ingroup    mymodule othermodule1 othermodule2
  *      \brief      This file is an example for a CRUD class file (Create/Read/Update/Delete)
- *		\version    $Id: skeleton_class.class.php,v 1.32 2011/07/31 22:21:58 eldy Exp $
+ *		\version    $Id: bbc_ballons.class.php,v 1.32 2011/07/31 22:21:58 eldy Exp $
  *		\author		Put author name here
- *		\remarks	Put here some comments
+ *		\remarks	Initialy built by build_class_from_table on 2012-10-07 17:37
  */
 
 // Put here all includes required by your class file
@@ -32,37 +32,47 @@
 
 
 /**
- *      \class      Skeleton_class
+ *      \class      Bbc_ballons
  *      \brief      Put here description of your class
- *		\remarks	Put here some comments
+ *		\remarks	Initialy built by build_class_from_table on 2012-10-07 17:37
  */
-class Skeleton_class // extends CommonObject
+class Bbc_ballons // extends CommonObject
 {
 	var $db;							//!< To store db handler
 	var $error;							//!< To return error code (or message)
 	var $errors=array();				//!< To return several error codes (or messages)
-	//var $element='skeleton';			//!< Id that identify managed objects
-	//var $table_element='skeleton';	//!< Name of table without prefix where object is stored
+	//var $element='bbc_ballons';			//!< Id that identify managed objects
+	//var $table_element='bbc_ballons';	//!< Name of table without prefix where object is stored
 
     var $id;
-    var $prop1;
-    var $prop2;
-	//...
+    
+	var $immat;
+	var $marraine;
+	var $fk_responsable;
+	var $fk_co_responsable;
+	var $date='';
+	var $init_heure;
+	var $is_disable;
+	var $picture;
 
+    var $fields = [
+        'immat' => ['label' => 'immat', 'visible' => 1, 'enables' => 1],
+        'marraine' => ['label' => 'marraine', 'visible' => 1, 'enables' => 1],
+        'fk_responsable' => ['label' => 'fk_responsable', 'visible' => 1, 'enables' => 1],
+        'fk_co_responsable' => ['label' => 'fk_co_responsable', 'visible' => 1, 'enables' => 1],
+        'is_disable' => ['label' => 'is_disable', 'visible' => 1, 'enables' => 1],
+    ];
 
     /**
-     *      Constructor
-     *      @param      DB      Database handler
+     * @param DoliDb $db Database handler
      */
-    function Skeleton_class($DB)
+    public function __construct(DoliDB $db)
     {
-        $this->db = $DB;
-        return 1;
+        $this->db = $db;
     }
 
 
     /**
-     *      Create object into database
      *      @param      user        	User that create
      *      @param      notrigger	    0=launch triggers after, 1=disable triggers
      *      @return     int         	<0 if KO, Id of created object if OK
@@ -73,22 +83,45 @@ class Skeleton_class // extends CommonObject
 		$error=0;
 
 		// Clean parameters
-        if (isset($this->prop1)) $this->prop1=trim($this->prop1);
-        if (isset($this->prop2)) $this->prop2=trim($this->prop2);
-		//...
+        
+		if (isset($this->immat)) $this->immat=trim($this->immat);
+		if (isset($this->marraine)) $this->marraine=trim($this->marraine);
+		if (isset($this->fk_responsable)) $this->fk_responsable=trim($this->fk_responsable);
+		if (isset($this->fk_co_responsable)) $this->fk_co_responsable=trim($this->fk_co_responsable);
+		if (isset($this->init_heure)) $this->init_heure=trim($this->init_heure);
+		if (isset($this->is_disable)) $this->is_disable=trim($this->is_disable);
+		if (isset($this->picture)) $this->picture=trim($this->picture);
+
+        
 
 		// Check parameters
 		// Put here code to add control on parameters values
 
         // Insert request
-		$sql = "INSERT INTO ".MAIN_DB_PREFIX."mytable(";
-		$sql.= " field1,";
-		$sql.= " field2";
-		//...
+		$sql = "INSERT INTO ".MAIN_DB_PREFIX."bbc_ballons(";
+		
+		$sql.= "immat,";
+		$sql.= "marraine,";
+		$sql.= "fk_responsable,";
+		$sql.= "fk_co_responsable,";
+		$sql.= "date,";
+		$sql.= "init_heure,";
+		$sql.= "is_disable,";
+		$sql.= "picture";
+
+		
         $sql.= ") VALUES (";
-        $sql.= " '".$this->prop1."',";
-        $sql.= " '".$this->prop2."'";
-		//...
+        
+		$sql.= " ".(! isset($this->immat)?'NULL':"'".$this->db->escape($this->immat)."'").",";
+		$sql.= " ".(! isset($this->marraine)?'NULL':"'".$this->db->escape($this->marraine)."'").",";
+		$sql.= " ".(! isset($this->fk_responsable)?'NULL':"'".$this->fk_responsable."'").",";
+		$sql.= " ".(! isset($this->fk_co_responsable)?'NULL':"'".$this->fk_co_responsable."'").",";
+		$sql.= " ".(! isset($this->date) || dol_strlen($this->date)==0?'NULL':$this->db->idate($this->date)).",";
+		$sql.= " ".(! isset($this->init_heure)?'NULL':"'".$this->init_heure."'").",";
+		$sql.= " ".(! isset($this->is_disable)?'0':"'".$this->is_disable."'").",";
+		$sql.= " ".(! isset($this->picture)?'NULL':"'".$this->picture."'")."";
+
+        
 		$sql.= ")";
 
 		$this->db->begin();
@@ -99,7 +132,7 @@ class Skeleton_class // extends CommonObject
 
 		if (! $error)
         {
-            $this->id = $this->db->last_insert_id(MAIN_DB_PREFIX."mytable");
+            $this->id = $this->db->last_insert_id(MAIN_DB_PREFIX."bbc_ballons");
 
 			if (! $notrigger)
 			{
@@ -144,10 +177,18 @@ class Skeleton_class // extends CommonObject
     	global $langs;
         $sql = "SELECT";
 		$sql.= " t.rowid,";
-		$sql.= " t.field1,";
-		$sql.= " t.field2";
-		//...
-        $sql.= " FROM ".MAIN_DB_PREFIX."mytable as t";
+		
+		$sql.= " t.immat,";
+		$sql.= " t.marraine,";
+		$sql.= " t.fk_responsable,";
+		$sql.= " t.fk_co_responsable,";
+		$sql.= " t.date,";
+		$sql.= " t.init_heure,";
+		$sql.= " t.is_disable,";
+		$sql.= " t.picture";
+
+		
+        $sql.= " FROM ".MAIN_DB_PREFIX."bbc_ballons as t";
         $sql.= " WHERE t.rowid = ".$id;
 
     	dol_syslog(get_class($this)."::fetch sql=".$sql, LOG_DEBUG);
@@ -159,9 +200,17 @@ class Skeleton_class // extends CommonObject
                 $obj = $this->db->fetch_object($resql);
 
                 $this->id    = $obj->rowid;
-                $this->prop1 = $obj->field1;
-                $this->prop2 = $obj->field2;
-				//...
+                
+				$this->immat = $obj->immat;
+				$this->marraine = $obj->marraine;
+				$this->fk_responsable = $obj->fk_responsable;
+				$this->fk_co_responsable = $obj->fk_co_responsable;
+				$this->date = $this->db->jdate($obj->date);
+				$this->init_heure = $obj->init_heure;
+				$this->is_disable = $obj->is_disable;
+				$this->picture = $obj->picture;
+
+                
             }
             $this->db->free($resql);
 
@@ -188,20 +237,37 @@ class Skeleton_class // extends CommonObject
 		$error=0;
 
 		// Clean parameters
-        if (isset($this->prop1)) $this->prop1=trim($this->prop1);
-        if (isset($this->prop2)) $this->prop2=trim($this->prop2);
-		//...
+        
+		if (isset($this->immat)) $this->immat=trim($this->immat);
+		if (isset($this->marraine)) $this->marraine=trim($this->marraine);
+		if (isset($this->fk_responsable)) $this->fk_responsable=trim($this->fk_responsable);
+		if (isset($this->fk_co_responsable)) $this->fk_co_responsable=trim($this->fk_co_responsable);
+//		if (isset($this->init_heure)) $this->init_heure=trim($this->init_heure);
+		if (isset($this->is_disable)) $this->is_disable=trim($this->is_disable);
+		if (isset($this->picture)) $this->picture=trim($this->picture);
+
+        
 
 		// Check parameters
 		// Put here code to add control on parameters values
 
         // Update request
-        $sql = "UPDATE ".MAIN_DB_PREFIX."mytable SET";
-        $sql.= " field1=".(isset($this->field1)?"'".$this->db->escape($this->field1)."'":"null").",";
-        $sql.= " field2=".(isset($this->field2)?"'".$this->db->escape($this->field2)."'":"null")."";
-		//...
+        $sql = "UPDATE ".MAIN_DB_PREFIX."bbc_ballons SET";
+        
+		$sql.= " immat=".(isset($this->immat)?"'".$this->db->escape($this->immat)."'":"null").",";
+		$sql.= " marraine=".(isset($this->marraine)?"'".$this->db->escape($this->marraine)."'":"null").",";
+		$sql.= " fk_responsable=".(isset($this->fk_responsable)?$this->fk_responsable:"null").",";
+		$sql.= " fk_co_responsable=".(isset($this->fk_co_responsable)?$this->fk_co_responsable:"null").",";
+		$sql.= " date=".(dol_strlen($this->date)!=0 ? "'".$this->db->idate($this->date)."'" : 'null').",";
+		$sql.= " init_heure=".(isset($this->init_heure)?"'".$this->init_heure."'":"null").",";
+		$sql.= " is_disable=".(isset($this->is_disable)?"'".$this->is_disable."'":"'0'").",";
+//		$sql.= " is_disable='0',";
+		$sql.= " picture=".(isset($this->picture)?$this->picture:"null")."";
+
+        
         $sql.= " WHERE rowid=".$this->id;
 
+        
 		$this->db->begin();
 
 		dol_syslog(get_class($this)."::update sql=".$sql, LOG_DEBUG);
@@ -254,7 +320,7 @@ class Skeleton_class // extends CommonObject
 		global $conf, $langs;
 		$error=0;
 
-		$sql = "DELETE FROM ".MAIN_DB_PREFIX."mytable";
+		$sql = "DELETE FROM ".MAIN_DB_PREFIX."bbc_ballons";
 		$sql.= " WHERE rowid=".$this->id;
 
 		$this->db->begin();
@@ -310,7 +376,7 @@ class Skeleton_class // extends CommonObject
 
 		$error=0;
 
-		$object=new Skeleton_class($this->db);
+		$object=new Bbc_ballons($this->db);
 
 		$this->db->begin();
 
@@ -360,9 +426,21 @@ class Skeleton_class // extends CommonObject
 	function initAsSpecimen()
 	{
 		$this->id=0;
-		$this->prop1='prop1';
-		$this->prop2='prop2';
+		
+		$this->immat='';
+		$this->marraine='';
+		$this->fk_responsable='';
+		$this->date='';
+		$this->init_heure='';
+		$this->is_disable='';
+		$this->picture='';
+
+		
 	}
+
+    public function getImmatriculation()
+    {
+    }
 
 }
 ?>

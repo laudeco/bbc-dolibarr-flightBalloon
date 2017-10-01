@@ -53,9 +53,9 @@ if (!$res)
     die("Include of main fails");
 // Change this following line to use the correct relative path from htdocs (do not remove DOL_DOCUMENT_ROOT)
 require_once(DOL_DOCUMENT_ROOT . "/core/class/dolgraph.class.php");
-require_once(DOL_DOCUMENT_ROOT . "/flightLog/bbc_vols.class.php");
-require_once(DOL_DOCUMENT_ROOT . "/flightBalloon/bbc_ballons.class.php");
-require_once(DOL_DOCUMENT_ROOT . "/flightLog/bbc_types.class.php");
+require_once(DOL_DOCUMENT_ROOT . "/flightlog/bbc_vols.class.php");
+require_once(DOL_DOCUMENT_ROOT . "/flightballoon/bbc_ballons.class.php");
+require_once(DOL_DOCUMENT_ROOT . "/flightlog/bbc_types.class.php");
 // Load traductions files requiredby by page
 $langs->load("companies");
 $langs->load("other");
@@ -79,7 +79,7 @@ if ($_POST['action'] == 'deleteconfirm' && $_POST['confirm'] == 'yes') {
     if ($_GET['bal']) {
         $tmp = New Bbc_ballons($db);
         $tmp->fetch($_GET['bal']);
-        if (isset($tmp->id) && ($user->rights->flightBalloon->bal->del)) {
+        if (isset($tmp->id) && ($user->rights->flightballoon->bal->del)) {
             if ($tmp->delete($user) > 0) {
                 Header("Location: balloons.php");
             }
@@ -136,7 +136,7 @@ print '<div class="tabs">';
 print '<a class="tabTitle"><img src="/theme/eldy/img/object_user.png" border="0" alt="" title=""> Fiche Ballon</a>'; //title
 print '<a class="tab" href="fiche.php?bal='.  GETPOST('bal').'">Fiche Ballon</a>';
 print '<a id="active" class="tab" href="amp.php?bal='.  GETPOST('bal').'">AMP</a>';
-//print '<a class="tab" href="/categories/categorie.php?id=94&amp;type=3">Catégories</a>';
+//print '<a class="tab" href="/categories/categorie.php?id=94&amp;type=3">Catï¿½gories</a>';
 //print '<a class="tab" href="/adherents/note.php?id=94">Note</a>';
 //print '<a class="tab" href="/adherents/document.php?id=94">Fichiers joints</a>';
 //print '<a class="tab" href="/adherents/info.php?id=94">Suivi</a>';
@@ -147,7 +147,7 @@ print '</div>';
 /***** TAB CONTENT *****/
 print '<div class="tabBar">';
 //si l'action est edit et que l'utilisateur a le droit de modifier
-if (isset($_GET['action']) && $_GET['action'] == 'edit' && $user->rights->flightBalloon->bal->edit) {
+if (isset($_GET['action']) && $_GET['action'] == 'edit' && $user->rights->flightballoon->bal->edit) {
     $html = new Form($db);
     $datec = dol_mktime(12, 0, 0, $_POST["remonth"], $_POST["reday"], $_POST["reyear"]);
 
@@ -203,14 +203,14 @@ print '<div class="tabsAction">';
 if (!isset($_GET['action'])) {
     //supprimer
     //si l'utilisateur a le droit de suppression ou que c'est son vol
-    if ($user->rights->flightBalloon->bal->delete || $user->admin) {
+    if ($user->rights->flightballoon->bal->delete || $user->admin) {
         print '<a class="butActionDelete" href="fiche.php?action=delete&bal=' . $balloon->id . '">' . $langs->trans('Delete') . '</a>';
     } else {
         print '<a class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("NotAllowed")) . '">' . $langs->trans('Delete') . '</a>';
     }
 
     //bouton modifier si on a le droit ou si c'est son vol
-    if ($user->rights->flightBalloon->bal->edit || $user->admin) {
+    if ($user->rights->flightballoon->bal->edit || $user->admin) {
         print '<a class="butAction" href="fiche.php?action=edit&bal=' . $balloon->id . '">' . $langs->trans('Edit') . '</a>';
     } else {
         print '<a class="butActionRefused" href="#" title="' . dol_escape_htmltag($langs->trans("NotAllowed")) . '">' . $langs->trans('Edit') . '</a>';

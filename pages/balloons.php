@@ -105,7 +105,7 @@ $legend = array();
 $sql="SELECT BAL.*";
 $sql .= " FROM llx_bbc_ballons AS BAL";
 
-if(!$user->rights->flightBalloon->bal->edit){
+if(!$user->rights->flightballoon->bal->edit){
     $sql .= " WHERE (fk_co_responsable = ".$user->id  ;
     $sql .= " OR fk_responsable = ".$user->id.')';
 }
@@ -130,7 +130,7 @@ if($resql){
 			$obj = $db->fetch_object($resql); //vol
 			print '<tr>';
 			if($obj){
-				//recupération du responsable
+				//recupï¿½ration du responsable
 				$responsable = New User($db); //pilot
 				$responsable->fetch($obj->fk_responsable);
 				$co_responsable = New User($db); //pilot
