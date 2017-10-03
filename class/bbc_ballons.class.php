@@ -54,6 +54,7 @@ class Bbc_ballons // extends CommonObject
 	var $init_heure;
 	var $is_disable;
 	var $picture;
+	var $rowid;
 
     var $fields = [
         'immat' => ['label' => 'immat', 'visible' => 1, 'enables' => 1],
@@ -438,8 +439,76 @@ class Bbc_ballons // extends CommonObject
 		
 	}
 
+    /**
+     * @return string
+     */
     public function getImmatriculation()
     {
+    	return $this->immat;
+    }
+
+    /**
+     *  Return label of status of user (active, inactive)
+     *
+     *  @param	int		$mode          0=libelle long, 1=libelle court, 2=Picto + Libelle court, 3=Picto, 4=Picto + Libelle long, 5=Libelle court + Picto
+     *  @return	string 			       Label of status
+     */
+    public function getLibStatut($mode=0)
+    {
+        return $this->LibStatut(!$this->is_disable,$mode);
+    }
+
+    /**
+     *  Renvoi le libelle d'un statut donne
+     *
+     *  @param	int		$statut        	Id statut
+     *  @param  int		$mode          	0=libelle long, 1=libelle court, 2=Picto + Libelle court, 3=Picto, 4=Picto + Libelle long, 5=Libelle court + Picto
+     *  @return string 			       	Label of status
+     */
+    public function LibStatut($statut,$mode=0)
+    {
+        global $langs;
+        $langs->load('users');
+
+        if ($mode == 0)
+        {
+            $prefix='';
+            if ($statut == 1) return $langs->trans('Enabled');
+            if ($statut == 0) return $langs->trans('Disabled');
+        }
+        if ($mode == 1)
+        {
+            if ($statut == 1) return $langs->trans('Enabled');
+            if ($statut == 0) return $langs->trans('Disabled');
+        }
+        if ($mode == 2)
+        {
+            if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"').' '.$langs->trans('Enabled');
+            if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"').' '.$langs->trans('Disabled');
+        }
+        if ($mode == 3)
+        {
+            if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"');
+            if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"');
+        }
+        if ($mode == 4)
+        {
+            if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"').' '.$langs->trans('Enabled');
+            if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"').' '.$langs->trans('Disabled');
+        }
+        if ($mode == 5)
+        {
+            if ($statut == 1) return $langs->trans('Enabled').' '.img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"');
+            if ($statut == 0) return $langs->trans('Disabled').' '.img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"');
+        }
+    }
+
+    /**
+	 * Get the link to go to the current balloon.
+     */
+    public function getNomUrl()
+    {
+    	return sprintf('<a href="%s?id=%s">%s</a>',DOL_MAIN_URL_ROOT.'/flightballoon/balloon_card.php', $this->id, $this->getImmatriculation());
     }
 
 }

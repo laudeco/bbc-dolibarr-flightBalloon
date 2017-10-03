@@ -2,6 +2,16 @@
 #
 # Générique
 #
+balloons = ballons
+
+#
+# Fields
+#
+immat = Immatriculation
+marraine = Marraine
+fk_responsable = Responsable
+fk_co_responsable = Co-responsable
+is_disable = Actif
 
 # Module label 'ModuleXXXName'
 # (where XXX is value of numeric property 'numero' of module)
@@ -14,8 +24,6 @@ Module500000Desc = Carnet de vol
 #
 # Page d'administration
 #
-
-FLightLogSetup = Configuration du module carnet de vol
 
 #
 # Page À propos

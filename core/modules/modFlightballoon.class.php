@@ -72,7 +72,7 @@ class modFlightballoon extends DolibarrModules {
         $this->requiredby = array();
         $this->phpmin = array(5, 5);
         $this->need_dolibarr_version = array(4,0);
-        $this->langfiles = array("langfiles@mymodule");
+        $this->langfiles = array("mymodule@flightballoon");
         $this->tabs = array();
 
         $this->initDictionnaries();
