@@ -79,6 +79,8 @@ $pagenext = $page + 1;
 // Initialize technical objects
 $object=new Bbc_ballons($db);
 $extrafields = new ExtraFields($db);
+$owner = new User($db);
+$coOwner = new User($db);
 
 // Fetch optionals attributes and labels
 $extralabels = $extrafields->fetch_name_optionals_label('bbc_balloon');
@@ -92,7 +94,6 @@ if (! $sortorder) $sortorder="ASC";
 $socid=0;
 if ($user->societe_id > 0)
 {
-    //$socid = $user->societe_id;
 	accessforbidden();
 }
 
@@ -155,11 +156,23 @@ $title = $langs->trans('ListOf', $langs->transnoentitiesnoconv("ballons"));
 
 // Build and execute select
 // --------------------------------------------------------------------
-$sql = 'SELECT ';
+$sql = 'SELECT t.rowid, ';
+//balloon
 foreach($object->fields as $key => $val)
 {
     $sql.='t.'.$key.', ';
 }
+
+//owner
+$sql.='owner.rowid as owner_rowid, ';
+$sql.='owner.lastname as owner_lastname, ';
+$sql.='owner.firstname as owner_firstname, ';
+
+// co owner
+$sql.='co_owner.rowid as co_owner_rowid, ';
+$sql.='co_owner.lastname as co_owner_lastname, ';
+$sql.='co_owner.firstname as co_owner_firstname, ';
+
 // Add fields from extrafields
 foreach ($extrafields->attribute_label as $key => $val) $sql.=($extrafields->attribute_type[$key] != 'separate' ? ", ef.".$key.' as options_'.$key : '');
 // Add fields from hooks
@@ -168,6 +181,8 @@ $reshook=$hookmanager->executeHooks('printFieldListSelect',$parameters);    // N
 $sql.=$hookmanager->resPrint;
 $sql=preg_replace('/, $/','', $sql);
 $sql.= " FROM ".MAIN_DB_PREFIX."bbc_ballons as t";
+$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."user as owner ON t.fk_responsable = owner.rowid";
+$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."user as co_owner ON t.fk_co_responsable = co_owner.rowid";
 if (is_array($extrafields->attribute_label) && count($extrafields->attribute_label)) $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."llx_bbc_ballons_extrafields as ef on (t.rowid = ef.fk_object)";
 $sql.= " WHERE 1 = 1 ";
 foreach($search as $key => $val)
@@ -408,6 +423,14 @@ while ($i < min($num, $limit))
     		if (isset($obj->$key)) $object->$key = $obj->$key;
     	}
 
+    	$owner->id = $obj->owner_rowid;
+    	$owner->lastname = $obj->owner_lastname;
+    	$owner->firstname = $obj->owner_firstname;
+
+    	$coOwner->id = $obj->co_owner_rowid;
+    	$coOwner->lastname = $obj->co_owner_lastname;
+    	$coOwner->firstname = $obj->co_owner_firstname;
+
         // Show here line of result
         print '<tr class="oddeven">';
         foreach($object->fields as $key => $val)
@@ -421,8 +444,10 @@ while ($i < min($num, $limit))
             {
                 print '<td'.($align?' class="'.$align.'"':'').'>';
                 if (in_array($val['type'], array('date','datetime','timestamp'))) print dol_print_date($db->jdate($obj->$key), 'dayhour');
-                elseif ($key == 'ref') print $object->getNomUrl(1);
-                elseif ($key == 'status') print $object->getLibStatut(3);
+                elseif ($key == 'ref' || $key == 'immat') print $object->getNomUrl();
+                elseif ($key == 'status'  || $key == 'is_disable') print $object->getLibStatut(3);
+                elseif ($key == 'fk_responsable') print $owner->getNomUrl(1);
+                elseif ($key == 'fk_co_responsable') print $coOwner->getNomUrl(1);
                 else print $obj->$key;
                 print '</td>';
                 if (! $i) $totalarray['nbfield']++;
