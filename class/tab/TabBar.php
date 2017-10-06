@@ -27,16 +27,16 @@ class TabBar
 	/**
 	 * @param Tab $tab
 	 */
-	public function addTab(Tab $tab){
+	public function addTab(Tab $tab) {
 		$this->bar[] = $tab;
 	}
 
 	/**
 	 * @retuern array
 	 */
-	public function toArray(){
+	public function toArray() {
 		$menuAsArray = [];
-		foreach($this->bar as $tab){
+		foreach ($this->bar as $tab) {
 			$menuAsArray[] = $tab->toArray();
 		}
 
