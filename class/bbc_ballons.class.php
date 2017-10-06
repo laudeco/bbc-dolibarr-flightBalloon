@@ -26,7 +26,7 @@
  */
 
 // Put here all includes required by your class file
-require_once DOL_DOCUMENT_ROOT . '/core/class/commonobject.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/commonobject.class.php';
 //require_once(DOL_DOCUMENT_ROOT."/societe/class/societe.class.php");
 //require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
 
@@ -38,55 +38,55 @@ require_once DOL_DOCUMENT_ROOT . '/core/class/commonobject.class.php';
  */
 class Bbc_ballons extends CommonObject
 {
-	var $db;							//!< To store db handler
-	var $error;							//!< To return error code (or message)
-	var $errors=array();				//!< To return several error codes (or messages)
+	var $db; //!< To store db handler
+	var $error; //!< To return error code (or message)
+	var $errors = array(); //!< To return several error codes (or messages)
 	//var $element='bbc_ballons';			//!< Id that identify managed objects
 	//var $table_element='bbc_ballons';	//!< Name of table without prefix where object is stored
 
-    var $id;
+	var $id;
     
 	var $immat;
 	var $marraine;
 	var $fk_responsable;
 	var $fk_co_responsable;
-	var $date='';
+	var $date = '';
 	var $init_heure;
 	var $is_disable;
 	var $picture;
 	var $rowid;
 
-    var $fields = [
-        'immat' => ['label' => 'immat', 'visible' => 1, 'enables' => 1],
-        'marraine' => ['label' => 'marraine', 'visible' => 1, 'enables' => 1],
-        'fk_responsable' => ['label' => 'fk_responsable', 'visible' => 1, 'enables' => 1],
-        'fk_co_responsable' => ['label' => 'fk_co_responsable', 'visible' => 1, 'enables' => 1],
-        'is_disable' => ['label' => 'is_disable', 'visible' => 1, 'enables' => 1],
-    ];
+	var $fields = [
+		'immat' => ['label' => 'immat', 'visible' => 1, 'enables' => 1],
+		'marraine' => ['label' => 'marraine', 'visible' => 1, 'enables' => 1],
+		'fk_responsable' => ['label' => 'fk_responsable', 'visible' => 1, 'enables' => 1],
+		'fk_co_responsable' => ['label' => 'fk_co_responsable', 'visible' => 1, 'enables' => 1],
+		'is_disable' => ['label' => 'is_disable', 'visible' => 1, 'enables' => 1],
+	];
 
-    /**
-     * @var string
-     */
-    public $table_element;
+	/**
+	 * @var string
+	 */
+	public $table_element;
 
-    /**
-     * @param DoliDb $db Database handler
-     */
-    public function __construct(DoliDB $db)
-    {
-        $this->db = $db;
-        $this->table_element = 'llx_bbc_ballons';
-    }
+	/**
+	 * @param DoliDb $db Database handler
+	 */
+	public function __construct(DoliDB $db)
+	{
+		$this->db = $db;
+		$this->table_element = 'llx_bbc_ballons';
+	}
 
 
-    /**
-     *      @param      user        	User that create
-     *      @param      notrigger	    0=launch triggers after, 1=disable triggers
-     *      @return     int         	<0 if KO, Id of created object if OK
-     */
-    function create($user, $notrigger=0)
-    {
-    	global $conf, $langs;
+	/**
+	 *      @param      user        	User that create
+	 *      @param      notrigger	    0=launch triggers after, 1=disable triggers
+	 *      @return     int         	<0 if KO, Id of created object if OK
+	 */
+	function create($user, $notrigger=0)
+	{
+		global $conf, $langs;
 		$error=0;
 
 		// Clean parameters
@@ -104,7 +104,7 @@ class Bbc_ballons extends CommonObject
 		// Check parameters
 		// Put here code to add control on parameters values
 
-        // Insert request
+		// Insert request
 		$sql = "INSERT INTO ".MAIN_DB_PREFIX."bbc_ballons(";
 		
 		$sql.= "immat,";
@@ -117,7 +117,7 @@ class Bbc_ballons extends CommonObject
 		$sql.= "picture";
 
 		
-        $sql.= ") VALUES (";
+		$sql.= ") VALUES (";
         
 		$sql.= " ".(! isset($this->immat)?'NULL':"'".$this->db->escape($this->immat)."'").",";
 		$sql.= " ".(! isset($this->marraine)?'NULL':"'".$this->db->escape($this->marraine)."'").",";
@@ -134,34 +134,34 @@ class Bbc_ballons extends CommonObject
 		$this->db->begin();
 
 	   	dol_syslog(get_class($this)."::create sql=".$sql, LOG_DEBUG);
-        $resql=$this->db->query($sql);
-    	if (! $resql) { $error++; $this->errors[]="Error ".$this->db->lasterror(); }
+		$resql=$this->db->query($sql);
+		if (! $resql) { $error++; $this->errors[]="Error ".$this->db->lasterror(); }
 
 		if (! $error)
-        {
-            $this->id = $this->db->last_insert_id(MAIN_DB_PREFIX."bbc_ballons");
+		{
+			$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX."bbc_ballons");
 
 			if (! $notrigger)
 			{
-	            // Uncomment this and change MYOBJECT to your own tag if you
-	            // want this action call a trigger.
+				// Uncomment this and change MYOBJECT to your own tag if you
+				// want this action call a trigger.
 
-	            //// Call triggers
-	            //include_once(DOL_DOCUMENT_ROOT . "/core/class/interfaces.class.php");
-	            //$interface=new Interfaces($this->db);
-	            //$result=$interface->run_triggers('MYOBJECT_CREATE',$this,$user,$langs,$conf);
-	            //if ($result < 0) { $error++; $this->errors=$interface->errors; }
-	            //// End call triggers
+				//// Call triggers
+				//include_once(DOL_DOCUMENT_ROOT . "/core/class/interfaces.class.php");
+				//$interface=new Interfaces($this->db);
+				//$result=$interface->run_triggers('MYOBJECT_CREATE',$this,$user,$langs,$conf);
+				//if ($result < 0) { $error++; $this->errors=$interface->errors; }
+				//// End call triggers
 			}
-        }
+		}
 
-        // Commit or rollback
-        if ($error)
+		// Commit or rollback
+		if ($error)
 		{
 			foreach($this->errors as $errmsg)
 			{
-	            dol_syslog(get_class($this)."::create ".$errmsg, LOG_ERR);
-	            $this->error.=($this->error?', '.$errmsg:$errmsg);
+				dol_syslog(get_class($this)."::create ".$errmsg, LOG_ERR);
+				$this->error.=($this->error?', '.$errmsg:$errmsg);
 			}
 			$this->db->rollback();
 			return -1*$error;
@@ -169,20 +169,20 @@ class Bbc_ballons extends CommonObject
 		else
 		{
 			$this->db->commit();
-            return $this->id;
+			return $this->id;
 		}
-    }
+	}
 
 
-    /**
-     * @param string $id
+	/**
+	 * @param string $id
 	 *
-     * @return int
-     */
-    function fetch($id)
-    {
-    	global $langs;
-        $sql = "SELECT";
+	 * @return int
+	 */
+	function fetch($id)
+	{
+		global $langs;
+		$sql = "SELECT";
 		$sql.= " t.rowid,";
 		
 		$sql.= " t.immat,";
@@ -195,18 +195,18 @@ class Bbc_ballons extends CommonObject
 		$sql.= " t.picture";
 
 		
-        $sql.= " FROM ".MAIN_DB_PREFIX."bbc_ballons as t";
-        $sql.= " WHERE t.rowid = ".$id;
+		$sql.= " FROM ".MAIN_DB_PREFIX."bbc_ballons as t";
+		$sql.= " WHERE t.rowid = ".$id;
 
-    	dol_syslog(get_class($this)."::fetch sql=".$sql, LOG_DEBUG);
-        $resql=$this->db->query($sql);
-        if ($resql)
-        {
-            if ($this->db->num_rows($resql))
-            {
-                $obj = $this->db->fetch_object($resql);
+		dol_syslog(get_class($this)."::fetch sql=".$sql, LOG_DEBUG);
+		$resql=$this->db->query($sql);
+		if ($resql)
+		{
+			if ($this->db->num_rows($resql))
+			{
+				$obj = $this->db->fetch_object($resql);
 
-                $this->id    = $obj->rowid;
+				$this->id    = $obj->rowid;
                 
 				$this->immat = $obj->immat;
 				$this->marraine = $obj->marraine;
@@ -218,29 +218,29 @@ class Bbc_ballons extends CommonObject
 				$this->picture = $obj->picture;
 
                 
-            }
-            $this->db->free($resql);
+			}
+			$this->db->free($resql);
 
-            return 1;
-        }
-        else
-        {
-      	    $this->error="Error ".$this->db->lasterror();
-            dol_syslog(get_class($this)."::fetch ".$this->error, LOG_ERR);
-            return -1;
-        }
-    }
+			return 1;
+		}
+		else
+		{
+	  		$this->error="Error ".$this->db->lasterror();
+			dol_syslog(get_class($this)."::fetch ".$this->error, LOG_ERR);
+			return -1;
+		}
+	}
 
 
-    /**
-     *      Update object into database
-     *      @param      user        	User that modify
-     *      @param      notrigger	    0=launch triggers after, 1=disable triggers
-     *      @return     int         	<0 if KO, >0 if OK
-     */
-    function update($user=0, $notrigger=0)
-    {
-    	global $conf, $langs;
+	/**
+	 *      Update object into database
+	 *      @param      user        	User that modify
+	 *      @param      notrigger	    0=launch triggers after, 1=disable triggers
+	 *      @return     int         	<0 if KO, >0 if OK
+	 */
+	function update($user=0, $notrigger=0)
+	{
+		global $conf, $langs;
 		$error=0;
 
 		// Clean parameters
@@ -258,8 +258,8 @@ class Bbc_ballons extends CommonObject
 		// Check parameters
 		// Put here code to add control on parameters values
 
-        // Update request
-        $sql = "UPDATE ".MAIN_DB_PREFIX."bbc_ballons SET";
+		// Update request
+		$sql = "UPDATE ".MAIN_DB_PREFIX."bbc_ballons SET";
         
 		$sql.= " immat=".(isset($this->immat)?"'".$this->db->escape($this->immat)."'":"null").",";
 		$sql.= " marraine=".(isset($this->marraine)?"'".$this->db->escape($this->marraine)."'":"null").",";
@@ -272,38 +272,38 @@ class Bbc_ballons extends CommonObject
 		$sql.= " picture=".(isset($this->picture)?$this->picture:"null")."";
 
         
-        $sql.= " WHERE rowid=".$this->id;
+		$sql.= " WHERE rowid=".$this->id;
 
         
 		$this->db->begin();
 
 		dol_syslog(get_class($this)."::update sql=".$sql, LOG_DEBUG);
-        $resql = $this->db->query($sql);
-    	if (! $resql) { $error++; $this->errors[]="Error ".$this->db->lasterror(); }
+		$resql = $this->db->query($sql);
+		if (! $resql) { $error++; $this->errors[]="Error ".$this->db->lasterror(); }
 
 		if (! $error)
 		{
 			if (! $notrigger)
 			{
-	            // Uncomment this and change MYOBJECT to your own tag if you
-	            // want this action call a trigger.
+				// Uncomment this and change MYOBJECT to your own tag if you
+				// want this action call a trigger.
 
-	            //// Call triggers
-	            //include_once(DOL_DOCUMENT_ROOT . "/core/class/interfaces.class.php");
-	            //$interface=new Interfaces($this->db);
-	            //$result=$interface->run_triggers('MYOBJECT_MODIFY',$this,$user,$langs,$conf);
-	            //if ($result < 0) { $error++; $this->errors=$interface->errors; }
-	            //// End call triggers
-	    	}
+				//// Call triggers
+				//include_once(DOL_DOCUMENT_ROOT . "/core/class/interfaces.class.php");
+				//$interface=new Interfaces($this->db);
+				//$result=$interface->run_triggers('MYOBJECT_MODIFY',$this,$user,$langs,$conf);
+				//if ($result < 0) { $error++; $this->errors=$interface->errors; }
+				//// End call triggers
+			}
 		}
 
-        // Commit or rollback
+		// Commit or rollback
 		if ($error)
 		{
 			foreach($this->errors as $errmsg)
 			{
-	            dol_syslog(get_class($this)."::update ".$errmsg, LOG_ERR);
-	            $this->error.=($this->error?', '.$errmsg:$errmsg);
+				dol_syslog(get_class($this)."::update ".$errmsg, LOG_ERR);
+				$this->error.=($this->error?', '.$errmsg:$errmsg);
 			}
 			$this->db->rollback();
 			return -1*$error;
@@ -313,15 +313,15 @@ class Bbc_ballons extends CommonObject
 			$this->db->commit();
 			return 1;
 		}
-    }
+	}
 
 
  	/**
-	 *   Delete object in database
-     *	 @param     user        	User that delete
-     *   @param     notrigger	    0=launch triggers after, 1=disable triggers
-	 *   @return	int				<0 if KO, >0 if OK
-	 */
+ 	 *   Delete object in database
+ 	 *	 @param     user        	User that delete
+ 	 *   @param     notrigger	    0=launch triggers after, 1=disable triggers
+ 	 *   @return	int				<0 if KO, >0 if OK
+ 	 */
 	function delete($user, $notrigger=0)
 	{
 		global $conf, $langs;
@@ -334,31 +334,31 @@ class Bbc_ballons extends CommonObject
 
 		dol_syslog(get_class($this)."::delete sql=".$sql);
 		$resql = $this->db->query($sql);
-    	if (! $resql) { $error++; $this->errors[]="Error ".$this->db->lasterror(); }
+		if (! $resql) { $error++; $this->errors[]="Error ".$this->db->lasterror(); }
 
 		if (! $error)
 		{
 			if (! $notrigger)
 			{
 				// Uncomment this and change MYOBJECT to your own tag if you
-		        // want this action call a trigger.
+				// want this action call a trigger.
 
-		        //// Call triggers
-		        //include_once(DOL_DOCUMENT_ROOT . "/core/class/interfaces.class.php");
-		        //$interface=new Interfaces($this->db);
-		        //$result=$interface->run_triggers('MYOBJECT_DELETE',$this,$user,$langs,$conf);
-		        //if ($result < 0) { $error++; $this->errors=$interface->errors; }
-		        //// End call triggers
+				//// Call triggers
+				//include_once(DOL_DOCUMENT_ROOT . "/core/class/interfaces.class.php");
+				//$interface=new Interfaces($this->db);
+				//$result=$interface->run_triggers('MYOBJECT_DELETE',$this,$user,$langs,$conf);
+				//if ($result < 0) { $error++; $this->errors=$interface->errors; }
+				//// End call triggers
 			}
 		}
 
-        // Commit or rollback
+		// Commit or rollback
 		if ($error)
 		{
 			foreach($this->errors as $errmsg)
 			{
-	            dol_syslog(get_class($this)."::delete ".$errmsg, LOG_ERR);
-	            $this->error.=($this->error?', '.$errmsg:$errmsg);
+				dol_syslog(get_class($this)."::delete ".$errmsg, LOG_ERR);
+				$this->error.=($this->error?', '.$errmsg:$errmsg);
 			}
 			$this->db->rollback();
 			return -1*$error;
@@ -379,33 +379,33 @@ class Bbc_ballons extends CommonObject
 	 */
 	function createFromClone($fromid)
 	{
-		global $user,$langs;
+		global $user, $langs;
 
-		$error=0;
+		$error = 0;
 
-		$object=new Bbc_ballons($this->db);
+		$object = new Bbc_ballons($this->db);
 
 		$this->db->begin();
 
 		// Load source object
 		$object->fetch($fromid);
-		$object->id=0;
-		$object->statut=0;
+		$object->id = 0;
+		$object->statut = 0;
 
 		// Clear fields
 		// ...
 
 		// Create clone
-		$result=$object->create($user);
+		$result = $object->create($user);
 
 		// Other options
-		if ($result < 0)
+		if ($result<0)
 		{
-			$this->error=$object->error;
+			$this->error = $object->error;
 			$error++;
 		}
 
-		if (! $error)
+		if (!$error)
 		{
 
 
@@ -413,7 +413,7 @@ class Bbc_ballons extends CommonObject
 		}
 
 		// End
-		if (! $error)
+		if (!$error)
 		{
 			$this->db->commit();
 			return $object->id;
@@ -432,98 +432,98 @@ class Bbc_ballons extends CommonObject
 	 */
 	function initAsSpecimen()
 	{
-		$this->id=0;
+		$this->id = 0;
 		
-		$this->immat='';
-		$this->marraine='';
-		$this->fk_responsable='';
-		$this->date='';
-		$this->init_heure='';
-		$this->is_disable='';
-		$this->picture='';
+		$this->immat = '';
+		$this->marraine = '';
+		$this->fk_responsable = '';
+		$this->date = '';
+		$this->init_heure = '';
+		$this->is_disable = '';
+		$this->picture = '';
 
 		
 	}
 
-    /**
-     * @return string
-     */
-    public function getImmatriculation()
-    {
-    	return $this->immat;
-    }
+	/**
+	 * @return string
+	 */
+	public function getImmatriculation()
+	{
+		return $this->immat;
+	}
 
-    /**
-     *  Return label of status of user (active, inactive)
-     *
-     *  @param	int		$mode          0=libelle long, 1=libelle court, 2=Picto + Libelle court, 3=Picto, 4=Picto + Libelle long, 5=Libelle court + Picto
-     *  @return	string 			       Label of status
-     */
-    public function getLibStatut($mode=0)
-    {
-        return $this->LibStatut(!$this->is_disable,$mode);
-    }
+	/**
+	 *  Return label of status of user (active, inactive)
+	 *
+	 *  @param	int		$mode          0=libelle long, 1=libelle court, 2=Picto + Libelle court, 3=Picto, 4=Picto + Libelle long, 5=Libelle court + Picto
+	 *  @return	string 			       Label of status
+	 */
+	public function getLibStatut($mode=0)
+	{
+		return $this->LibStatut(!$this->is_disable,$mode);
+	}
 
-    /**
-     *  Renvoi le libelle d'un statut donne
-     *
-     *  @param	int		$statut        	Id statut
-     *  @param  int		$mode          	0=libelle long, 1=libelle court, 2=Picto + Libelle court, 3=Picto, 4=Picto + Libelle long, 5=Libelle court + Picto
-     *  @return string 			       	Label of status
-     */
-    public function LibStatut($statut,$mode=0)
-    {
-        global $langs;
-        $langs->load('users');
+	/**
+	 *  Renvoi le libelle d'un statut donne
+	 *
+	 *  @param	int		$statut        	Id statut
+	 *  @param  int		$mode          	0=libelle long, 1=libelle court, 2=Picto + Libelle court, 3=Picto, 4=Picto + Libelle long, 5=Libelle court + Picto
+	 *  @return string 			       	Label of status
+	 */
+	public function LibStatut($statut,$mode=0)
+	{
+		global $langs;
+		$langs->load('users');
 
-        if ($mode == 0)
-        {
-            $prefix='';
-            if ($statut == 1) return $langs->trans('Enabled');
-            if ($statut == 0) return $langs->trans('Disabled');
-        }
-        if ($mode == 1)
-        {
-            if ($statut == 1) return $langs->trans('Enabled');
-            if ($statut == 0) return $langs->trans('Disabled');
-        }
-        if ($mode == 2)
-        {
-            if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"').' '.$langs->trans('Enabled');
-            if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"').' '.$langs->trans('Disabled');
-        }
-        if ($mode == 3)
-        {
-            if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"');
-            if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"');
-        }
-        if ($mode == 4)
-        {
-            if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"').' '.$langs->trans('Enabled');
-            if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"').' '.$langs->trans('Disabled');
-        }
-        if ($mode == 5)
-        {
-            if ($statut == 1) return $langs->trans('Enabled').' '.img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"');
-            if ($statut == 0) return $langs->trans('Disabled').' '.img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"');
-        }
-    }
+		if ($mode == 0)
+		{
+			$prefix='';
+			if ($statut == 1) return $langs->trans('Enabled');
+			if ($statut == 0) return $langs->trans('Disabled');
+		}
+		if ($mode == 1)
+		{
+			if ($statut == 1) return $langs->trans('Enabled');
+			if ($statut == 0) return $langs->trans('Disabled');
+		}
+		if ($mode == 2)
+		{
+			if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"').' '.$langs->trans('Enabled');
+			if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"').' '.$langs->trans('Disabled');
+		}
+		if ($mode == 3)
+		{
+			if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"');
+			if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"');
+		}
+		if ($mode == 4)
+		{
+			if ($statut == 1) return img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"').' '.$langs->trans('Enabled');
+			if ($statut == 0) return img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"').' '.$langs->trans('Disabled');
+		}
+		if ($mode == 5)
+		{
+			if ($statut == 1) return $langs->trans('Enabled').' '.img_picto($langs->trans('Enabled'),'statut4','class="pictostatus"');
+			if ($statut == 0) return $langs->trans('Disabled').' '.img_picto($langs->trans('Disabled'),'statut5','class="pictostatus"');
+		}
+	}
 
-    /**
+	/**
 	 * Get the link to go to the current balloon.
-     */
-    public function getNomUrl()
-    {
-    	return sprintf('<a href="%s?id=%s">%s</a>',DOL_MAIN_URL_ROOT.'/flightballoon/balloon_card.php', $this->id, $this->getImmatriculation());
-    }
+	 */
+	public function getNomUrl()
+	{
+		return sprintf('<a href="%s?id=%s">%s</a>',DOL_MAIN_URL_ROOT.'/flightballoon/balloon_card.php', $this->id, $this->getImmatriculation());
+	}
 
-    /**
-     * @return string
-     */
-    public function getTableName()
-    {
-        return $this->table_element;
-    }
+	/**
+	 * @return string
+	 */
+	public function getTableName()
+	{
+		return $this->table_element;
+	}
 
 }
 ?>
