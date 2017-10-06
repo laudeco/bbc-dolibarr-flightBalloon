@@ -52,10 +52,13 @@ if (! $res && file_exists("../../../main.inc.php")) $res=@include("../../../main
 if (! $res) die("Include of main fails");
 
 include_once(DOL_DOCUMENT_ROOT.'/core/class/html.formcompany.class.php');
-dol_include_once('/hello/class/llx_bbc_ballons.class.php');
+dol_include_once('/flightballoon/class/bbc_ballons.class.php');
+dol_include_once('/flightballoon/lib/card.lib.php');
+
+global $user, $langs, $db;
 
 // Load traductions files requiredby by page
-$langs->loadLangs(array("fli","other"));
+$langs->loadLangs(array("mymodule@flightballoon","other"));
 
 // Get parameters
 $id			= GETPOST('id', 'int');
@@ -64,9 +67,8 @@ $cancel     = GETPOST('cancel', 'aZ09');
 $backtopage = GETPOST('backtopage', 'alpha');
 
 // Initialize technical objects
-$object=new llx_bbc_ballons($db);
+$object=new Bbc_ballons($db);
 $extrafields = new ExtraFields($db);
-$diroutputmassaction=$conf->hello->dir_output . '/temp/massgeneration/'.$user->id;
 $hookmanager->initHooks(array('llx_bbc_ballonscard'));     // Note that conf->hooks_modules contains array
 // Fetch optionals attributes and labels
 $extralabels = $extrafields->fetch_name_optionals_label('llx_bbc_ballons');
@@ -87,14 +89,12 @@ if ($user->societe_id > 0)
 {
 	//accessforbidden();
 }
-//$result = restrictedArea($user, 'hello', $id);
 
 // fetch optionals attributes and labels
-$extralabels = $extrafields->fetch_name_optionals_label($object->table_element);
+$extralabels = $extrafields->fetch_name_optionals_label($object->getTableName());
 
 // Load object
 include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php';  // Must be include, not include_once  // Must be include, not include_once. Include fetch and fetch_thirdparty but not fetch_optionals
-
 
 
 /*
@@ -115,16 +115,16 @@ if (empty($reshook))
 	{
 		if ($action != 'addlink')
 		{
-			$urltogo=$backtopage?$backtopage:dol_buildpath('/hello/llx_bbc_ballons_list.php',1);
+			$urltogo=$backtopage?$backtopage:dol_buildpath('/flightbaloon/list.php',1);
 			header("Location: ".$urltogo);
 			exit;
 		}
-		if ($id > 0 || ! empty($ref)) $ret = $object->fetch($id,$ref);
+		if ($id > 0 || ! empty($ref)) $ret = $object->fetch($id);
 		$action='';
 	}
 
 	// Action to add record
-	if ($action == 'add' && ! empty($user->rights->hello->create))
+	if ($action == 'add' && ! empty($user->rights->bal->add))
 	{
         foreach ($object->fields as $key => $val)
         {
@@ -140,11 +140,11 @@ if (empty($reshook))
 
 		if (! $error)
 		{
-			$result=$object->createCommon($user);
+			$result=$object->create($user);
 			if ($result > 0)
 			{
 				// Creation OK
-				$urltogo=$backtopage?$backtopage:dol_buildpath('/hello/llx_bbc_ballons_list.php',1);
+				$urltogo=$backtopage?$backtopage:dol_buildpath('/flightballoon/list.php',1);
 				header("Location: ".$urltogo);
 				exit;
 			}
@@ -178,7 +178,7 @@ if (empty($reshook))
 
 		if (! $error)
 		{
-			$result=$object->updateCommon($user);
+			$result=$object->update($user);
 			if ($result > 0)
 			{
 				$action='view';
@@ -200,7 +200,7 @@ if (empty($reshook))
 	// Action to delete
 	if ($action == 'confirm_delete' && ! empty($user->rights->hello->delete))
 	{
-		$result=$object->deleteCommon($user);
+		$result=$object->delete($user);
 		if ($result > 0)
 		{
 			// Delete OK
@@ -227,28 +227,13 @@ if (empty($reshook))
 
 $form=new Form($db);
 
-llxHeader('','llx_bbc_ballons','');
-
-// Example : Adding jquery code
-print '<script type="text/javascript" language="javascript">
-jQuery(document).ready(function() {
-	function init_myfunc()
-	{
-		jQuery("#myid").removeAttr(\'disabled\');
-		jQuery("#myid").attr(\'disabled\',\'disabled\');
-	}
-	init_myfunc();
-	jQuery("#mybutton").click(function() {
-		init_myfunc();
-	});
-});
-</script>';
+llxHeader('',sprintf('Ballon - %s', $object->getImmatriculation()),'');
 
 
 // Part to create
 if ($action == 'create')
 {
-	print load_fiche_titre($langs->trans("NewObject", $langs->transnoentitiesnoconv("llx_bbc_ballons")));
+	print load_fiche_titre($langs->trans("Balloon", $langs->transnoentitiesnoconv("llx_bbc_ballons")));
 
 	print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
 	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
@@ -311,7 +296,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 {
     $res = $object->fetch_optionals($object->id, $extralabels);
 
-	$head = hello_prepare_head($object);
+	$head = balloonPrepareHead($object);
 	dol_fiche_head($head, 'order', $langs->trans("CustomerOrder"), -1, 'order');
 
 	$formconfirm = '';
@@ -350,51 +335,10 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	// Object card
 	// ------------------------------------------------------------
 
-	$linkback = '<a href="' . DOL_URL_ROOT . '/hello/llx_bbc_ballons_list.php' . (! empty($socid) ? '?socid=' . $socid : '') . '">' . $langs->trans("BackToList") . '</a>';
+	$linkback = '<a href="' . DOL_URL_ROOT . '/flightballoon/list.php">' . $langs->trans("BackToList") . '</a>';
 
 
 	$morehtmlref='<div class="refidno">';
-	/*
-	// Ref bis
-	$morehtmlref.=$form->editfieldkey("RefBis", 'ref_client', $object->ref_client, $object, $user->rights->hello->creer, 'string', '', 0, 1);
-	$morehtmlref.=$form->editfieldval("RefBis", 'ref_client', $object->ref_client, $object, $user->rights->hello->creer, 'string', '', null, null, '', 1);
-	// Thirdparty
-	$morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . $soc->getNomUrl(1);
-	// Project
-	if (! empty($conf->projet->enabled))
-	{
-	    $langs->load("projects");
-	    $morehtmlref.='<br>'.$langs->trans('Project') . ' ';
-	    if ($user->rights->hello->creer)
-	    {
-	        if ($action != 'classify')
-	        {
-	            $morehtmlref.='<a href="' . $_SERVER['PHP_SELF'] . '?action=classify&amp;id=' . $object->id . '">' . img_edit($langs->transnoentitiesnoconv('SetProject')) . '</a> : ';
-	            if ($action == 'classify') {
-	                //$morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'projectid', 0, 0, 1, 1);
-	                $morehtmlref.='<form method="post" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'">';
-	                $morehtmlref.='<input type="hidden" name="action" value="classin">';
-	                $morehtmlref.='<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-	                $morehtmlref.=$formproject->select_projects($object->socid, $object->fk_project, 'projectid', $maxlength, 0, 1, 0, 1, 0, 0, '', 1);
-	                $morehtmlref.='<input type="submit" class="button valignmiddle" value="'.$langs->trans("Modify").'">';
-	                $morehtmlref.='</form>';
-	            } else {
-	                $morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'none', 0, 0, 0, 1);
-	            }
-	        }
-	    } else {
-	        if (! empty($object->fk_project)) {
-	            $proj = new Project($db);
-	            $proj->fetch($object->fk_project);
-	            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
-	            $morehtmlref.=$proj->ref;
-	            $morehtmlref.='</a>';
-	        } else {
-	            $morehtmlref.='';
-	        }
-	    }
-	}
-	*/
 	$morehtmlref.='</div>';
 
 
@@ -418,9 +362,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '<div class="ficheaddleft">';
 	print '<div class="underbanner clearboth"></div>';
 	print '<table class="border centpercent">';
-
-
-
 	print '</table>';
 	print '</div>';
 	print '</div>';
@@ -490,128 +431,6 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 
 	    print '</div></div></div>';
 	}
-
-
-	/*
-	 * Action presend
-	 */
-    /*
-	if ($action == 'presend')
-	{
-		$object->fetch_projet();
-
-		$ref = dol_sanitizeFileName($object->ref);
-		include_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
-		$fileparams = dol_most_recent_file($conf->commande->dir_output . '/' . $ref, preg_quote($ref, '/').'[^\-]+');
-		$file = $fileparams['fullname'];
-
-		// Define output language
-		$outputlangs = $langs;
-		$newlang = '';
-		if ($conf->global->MAIN_MULTILANGS && empty($newlang) && ! empty($_REQUEST['lang_id']))
-			$newlang = $_REQUEST['lang_id'];
-		if ($conf->global->MAIN_MULTILANGS && empty($newlang))
-			$newlang = $object->thirdparty->default_lang;
-
-		if (!empty($newlang))
-		{
-			$outputlangs = new Translate('', $conf);
-			$outputlangs->setDefaultLang($newlang);
-			$outputlangs->load('commercial');
-		}
-
-		// Build document if it not exists
-		if (! $file || ! is_readable($file)) {
-			$result = $object->generateDocument(GETPOST('model') ? GETPOST('model') : $object->modelpdf, $outputlangs, $hidedetails, $hidedesc, $hideref);
-			if ($result <= 0) {
-				dol_print_error($db, $object->error, $object->errors);
-				exit();
-			}
-			$fileparams = dol_most_recent_file($conf->commande->dir_output . '/' . $ref, preg_quote($ref, '/').'[^\-]+');
-			$file = $fileparams['fullname'];
-		}
-
-		print '<div id="formmailbeforetitle" name="formmailbeforetitle"></div>';
-		print '<div class="clearboth"></div>';
-		print '<br>';
-		print load_fiche_titre($langs->trans('SendOrderByMail'));
-
-		dol_fiche_head('');
-
-		// Cree l'objet formulaire mail
-		include_once DOL_DOCUMENT_ROOT . '/core/class/html.formmail.class.php';
-		$formmail = new FormMail($db);
-		$formmail->param['langsmodels']=(empty($newlang)?$langs->defaultlang:$newlang);
-        $formmail->fromtype = (GETPOST('fromtype')?GETPOST('fromtype'):(!empty($conf->global->MAIN_MAIL_DEFAULT_FROMTYPE)?$conf->global->MAIN_MAIL_DEFAULT_FROMTYPE:'user'));
-
-        if($formmail->fromtype === 'user'){
-            $formmail->fromid = $user->id;
-
-        }
-		$formmail->trackid='ord'.$object->id;
-		if (! empty($conf->global->MAIN_EMAIL_ADD_TRACK_ID) && ($conf->global->MAIN_EMAIL_ADD_TRACK_ID & 2))	// If bit 2 is set
-		{
-			include DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-			$formmail->frommail=dolAddEmailTrackId($formmail->frommail, 'ord'.$object->id);
-		}
-		$formmail->withfrom = 1;
-		$liste = array();
-		foreach ($object->thirdparty->thirdparty_and_contact_email_array(1) as $key => $value)
-			$liste [$key] = $value;
-		$formmail->withto = GETPOST('sendto') ? GETPOST('sendto') : $liste;
-		$formmail->withtocc = $liste;
-		$formmail->withtoccc = $conf->global->MAIN_EMAIL_USECCC;
-		if (empty($object->ref_client)) {
-			$formmail->withtopic = $outputlangs->trans('SendOrderRef', '__ORDERREF__');
-		} else if (! empty($object->ref_client)) {
-			$formmail->withtopic = $outputlangs->trans('SendOrderRef', '__ORDERREF__ (__REFCLIENT__)');
-		}
-		$formmail->withfile = 2;
-		$formmail->withbody = 1;
-		$formmail->withdeliveryreceipt = 1;
-		$formmail->withcancel = 1;
-		// Tableau des substitutions
-		$formmail->setSubstitFromObject($object);
-		$formmail->substit ['__ORDERREF__'] = $object->ref;
-
-		$custcontact = '';
-		$contactarr = array();
-		$contactarr = $object->liste_contact(- 1, 'external');
-
-		if (is_array($contactarr) && count($contactarr) > 0)
-		{
-			foreach ($contactarr as $contact)
-			{
-				if ($contact['libelle'] == $langs->trans('TypeContact_commande_external_CUSTOMER')) {	// TODO Use code and not label
-					$contactstatic = new Contact($db);
-					$contactstatic->fetch($contact ['id']);
-					$custcontact = $contactstatic->getFullName($langs, 1);
-				}
-			}
-
-			if (! empty($custcontact)) {
-				$formmail->substit['__CONTACTCIVNAME__'] = $custcontact;
-			}
-		}
-
-		// Tableau des parametres complementaires
-		$formmail->param['action'] = 'send';
-		$formmail->param['models'] = 'order_send';
-		$formmail->param['models_id']=GETPOST('modelmailselected','int');
-		$formmail->param['orderid'] = $object->id;
-		$formmail->param['returnurl'] = $_SERVER["PHP_SELF"] . '?id=' . $object->id;
-
-		// Init list of files
-		if (GETPOST("mode") == 'init') {
-			$formmail->clear_attached_files();
-			$formmail->add_attached_files($file, basename($file), dol_mimetype($file));
-		}
-
-		// Show form
-		print $formmail->get_form();
-
-		dol_fiche_end();
-	}*/
 }
 
 

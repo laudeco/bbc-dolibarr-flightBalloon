@@ -26,7 +26,7 @@
  */
 
 // Put here all includes required by your class file
-//require_once(DOL_DOCUMENT_ROOT."/core/class/commonobject.class.php");
+require_once DOL_DOCUMENT_ROOT . '/core/class/commonobject.class.php';
 //require_once(DOL_DOCUMENT_ROOT."/societe/class/societe.class.php");
 //require_once(DOL_DOCUMENT_ROOT."/product/class/product.class.php");
 
@@ -36,7 +36,7 @@
  *      \brief      Put here description of your class
  *		\remarks	Initialy built by build_class_from_table on 2012-10-07 17:37
  */
-class Bbc_ballons // extends CommonObject
+class Bbc_ballons extends CommonObject
 {
 	var $db;							//!< To store db handler
 	var $error;							//!< To return error code (or message)
@@ -65,11 +65,17 @@ class Bbc_ballons // extends CommonObject
     ];
 
     /**
+     * @var string
+     */
+    public $table_element;
+
+    /**
      * @param DoliDb $db Database handler
      */
     public function __construct(DoliDB $db)
     {
         $this->db = $db;
+        $this->table_element = 'llx_bbc_ballons';
     }
 
 
@@ -169,9 +175,9 @@ class Bbc_ballons // extends CommonObject
 
 
     /**
-     *    Load object in memory from database
-     *    @param      id          id object
-     *    @return     int         <0 if KO, >0 if OK
+     * @param string $id
+	 *
+     * @return int
      */
     function fetch($id)
     {
@@ -509,6 +515,14 @@ class Bbc_ballons // extends CommonObject
     public function getNomUrl()
     {
     	return sprintf('<a href="%s?id=%s">%s</a>',DOL_MAIN_URL_ROOT.'/flightballoon/balloon_card.php', $this->id, $this->getImmatriculation());
+    }
+
+    /**
+     * @return string
+     */
+    public function getTableName()
+    {
+        return $this->table_element;
     }
 
 }
