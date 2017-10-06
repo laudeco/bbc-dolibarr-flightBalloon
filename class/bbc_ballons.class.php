@@ -91,13 +91,27 @@ class Bbc_ballons extends CommonObject
 
 		// Clean parameters
         
-		if (isset($this->immat)) $this->immat = trim($this->immat);
-		if (isset($this->marraine)) $this->marraine = trim($this->marraine);
-		if (isset($this->fk_responsable)) $this->fk_responsable = trim($this->fk_responsable);
-		if (isset($this->fk_co_responsable)) $this->fk_co_responsable = trim($this->fk_co_responsable);
-		if (isset($this->init_heure)) $this->init_heure = trim($this->init_heure);
-		if (isset($this->is_disable)) $this->is_disable = trim($this->is_disable);
-		if (isset($this->picture)) $this->picture = trim($this->picture);
+		if (isset($this->immat)) {
+			$this->immat = trim($this->immat);
+		}
+		if (isset($this->marraine)) {
+			$this->marraine = trim($this->marraine);
+		}
+		if (isset($this->fk_responsable)) {
+			$this->fk_responsable = trim($this->fk_responsable);
+		}
+		if (isset($this->fk_co_responsable)) {
+			$this->fk_co_responsable = trim($this->fk_co_responsable);
+		}
+		if (isset($this->init_heure)) {
+			$this->init_heure = trim($this->init_heure);
+		}
+		if (isset($this->is_disable)) {
+			$this->is_disable = trim($this->is_disable);
+		}
+		if (isset($this->picture)) {
+			$this->picture = trim($this->picture);
+		}
 
         
 
@@ -165,8 +179,7 @@ class Bbc_ballons extends CommonObject
 			}
 			$this->db->rollback();
 			return -1 * $error;
-		}
-		else
+		} else
 		{
 			$this->db->commit();
 			return $this->id;
@@ -244,13 +257,25 @@ class Bbc_ballons extends CommonObject
 
 		// Clean parameters
         
-		if (isset($this->immat)) $this->immat = trim($this->immat);
-		if (isset($this->marraine)) $this->marraine = trim($this->marraine);
-		if (isset($this->fk_responsable)) $this->fk_responsable = trim($this->fk_responsable);
-		if (isset($this->fk_co_responsable)) $this->fk_co_responsable = trim($this->fk_co_responsable);
-//		if (isset($this->init_heure)) $this->init_heure=trim($this->init_heure);
-		if (isset($this->is_disable)) $this->is_disable = trim($this->is_disable);
-		if (isset($this->picture)) $this->picture = trim($this->picture);
+		if (isset($this->immat)) {
+			$this->immat = trim($this->immat);
+		}
+		if (isset($this->marraine)) {
+			$this->marraine = trim($this->marraine);
+		}
+		if (isset($this->fk_responsable)) {
+			$this->fk_responsable = trim($this->fk_responsable);
+		}
+		if (isset($this->fk_co_responsable)) {
+			$this->fk_co_responsable = trim($this->fk_co_responsable);
+		}
+		//		if (isset($this->init_heure)) $this->init_heure=trim($this->init_heure);
+		if (isset($this->is_disable)) {
+			$this->is_disable = trim($this->is_disable);
+		}
+		if (isset($this->picture)) {
+			$this->picture = trim($this->picture);
+		}
 
         
 
@@ -306,8 +331,7 @@ class Bbc_ballons extends CommonObject
 			}
 			$this->db->rollback();
 			return -1 * $error;
-		}
-		else
+		} else
 		{
 			$this->db->commit();
 			return 1;
@@ -361,8 +385,7 @@ class Bbc_ballons extends CommonObject
 			}
 			$this->db->rollback();
 			return -1 * $error;
-		}
-		else
+		} else
 		{
 			$this->db->commit();
 			return 1;
@@ -477,33 +500,57 @@ class Bbc_ballons extends CommonObject
 		if ($mode == 0)
 		{
 			$prefix = '';
-			if ($statut == 1) return $langs->trans('Enabled');
-			if ($statut == 0) return $langs->trans('Disabled');
+			if ($statut == 1) {
+				return $langs->trans('Enabled');
+			}
+			if ($statut == 0) {
+				return $langs->trans('Disabled');
+			}
 		}
 		if ($mode == 1)
 		{
-			if ($statut == 1) return $langs->trans('Enabled');
-			if ($statut == 0) return $langs->trans('Disabled');
+			if ($statut == 1) {
+				return $langs->trans('Enabled');
+			}
+			if ($statut == 0) {
+				return $langs->trans('Disabled');
+			}
 		}
 		if ($mode == 2)
 		{
-			if ($statut == 1) return img_picto($langs->trans('Enabled'), 'statut4', 'class="pictostatus"').' '.$langs->trans('Enabled');
-			if ($statut == 0) return img_picto($langs->trans('Disabled'), 'statut5', 'class="pictostatus"').' '.$langs->trans('Disabled');
+			if ($statut == 1) {
+				return img_picto($langs->trans('Enabled'), 'statut4', 'class="pictostatus"').' '.$langs->trans('Enabled');
+			}
+			if ($statut == 0) {
+				return img_picto($langs->trans('Disabled'), 'statut5', 'class="pictostatus"').' '.$langs->trans('Disabled');
+			}
 		}
 		if ($mode == 3)
 		{
-			if ($statut == 1) return img_picto($langs->trans('Enabled'), 'statut4', 'class="pictostatus"');
-			if ($statut == 0) return img_picto($langs->trans('Disabled'), 'statut5', 'class="pictostatus"');
+			if ($statut == 1) {
+				return img_picto($langs->trans('Enabled'), 'statut4', 'class="pictostatus"');
+			}
+			if ($statut == 0) {
+				return img_picto($langs->trans('Disabled'), 'statut5', 'class="pictostatus"');
+			}
 		}
 		if ($mode == 4)
 		{
-			if ($statut == 1) return img_picto($langs->trans('Enabled'), 'statut4', 'class="pictostatus"').' '.$langs->trans('Enabled');
-			if ($statut == 0) return img_picto($langs->trans('Disabled'), 'statut5', 'class="pictostatus"').' '.$langs->trans('Disabled');
+			if ($statut == 1) {
+				return img_picto($langs->trans('Enabled'), 'statut4', 'class="pictostatus"').' '.$langs->trans('Enabled');
+			}
+			if ($statut == 0) {
+				return img_picto($langs->trans('Disabled'), 'statut5', 'class="pictostatus"').' '.$langs->trans('Disabled');
+			}
 		}
 		if ($mode == 5)
 		{
-			if ($statut == 1) return $langs->trans('Enabled').' '.img_picto($langs->trans('Enabled'), 'statut4', 'class="pictostatus"');
-			if ($statut == 0) return $langs->trans('Disabled').' '.img_picto($langs->trans('Disabled'), 'statut5', 'class="pictostatus"');
+			if ($statut == 1) {
+				return $langs->trans('Enabled').' '.img_picto($langs->trans('Enabled'), 'statut4', 'class="pictostatus"');
+			}
+			if ($statut == 0) {
+				return $langs->trans('Disabled').' '.img_picto($langs->trans('Disabled'), 'statut5', 'class="pictostatus"');
+			}
 		}
 	}
 
