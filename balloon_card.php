@@ -93,10 +93,14 @@ $search_all = trim(GETPOST("search_all", 'alpha'));
 $search = array();
 foreach ($object->fields as $key => $val)
 {
-	if (GETPOST('search_'.$key, 'alpha')) $search[$key] = GETPOST('search_'.$key, 'alpha');
-}
+	if (GETPOST('search_'.$key, 'alpha')) {
+		$search[$key] = GETPOST('search_'.$key, 'alpha');
+	}
+	}
 
-if (empty($action) && empty($id) && empty($ref)) $action = 'view';
+if (empty($action) && empty($id) && empty($ref)) {
+	$action = 'view';
+}
 
 // Protection if external user
 if ($user->societe_id>0)
@@ -146,7 +150,10 @@ if (empty($reshook))
 	{
 		foreach ($object->fields as $key => $val)
 		{
-			if (in_array($key, array('rowid', 'entity', 'date_creation', 'tms', 'import_key'))) continue; // Ignore special fields
+			if (in_array($key, array('rowid', 'entity', 'date_creation', 'tms', 'import_key'))) {
+				continue;
+			}
+			// Ignore special fields
 
 			$object->$key = GETPOST($key, 'alpha');
 			if ($val['notnull'] && $object->$key == '')
@@ -187,7 +194,9 @@ if (empty($reshook))
 		foreach ($object->fields as $key => $val)
 		{
 			$object->$key = GETPOST($key, 'alpha');
-			if (in_array($key, array('rowid', 'entity', 'date_creation', 'tms', 'import_key'))) continue;
+			if (in_array($key, array('rowid', 'entity', 'date_creation', 'tms', 'import_key'))) {
+				continue;
+			}
 			if ($val['notnull'] && $object->$key == '')
 			{
 				$error++;
@@ -349,8 +358,11 @@ if ($object->id>0 && (empty($action) || ($action != 'edit' && $action != 'create
 	if (!$formconfirm) {
 		$parameters = array('lineid' => $lineid);
 		$reshook = $hookmanager->executeHooks('formConfirm', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-		if (empty($reshook)) $formconfirm .= $hookmanager->resPrint;
-		elseif ($reshook>0) $formconfirm = $hookmanager->resPrint;
+		if (empty($reshook)) {
+			$formconfirm .= $hookmanager->resPrint;
+		} elseif ($reshook>0) {
+			$formconfirm = $hookmanager->resPrint;
+		}
 	}
 
 	// Print form confirm
@@ -403,7 +415,9 @@ if ($object->id>0 && (empty($action) || ($action != 'edit' && $action != 'create
 		print '<div class="tabsAction">'."\n";
 		$parameters = array();
 		$reshook = $hookmanager->executeHooks('addMoreActionsButtons', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-		if ($reshook<0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
+		if ($reshook<0) {
+			setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
+		}
 
 		if (empty($reshook))
 		{
