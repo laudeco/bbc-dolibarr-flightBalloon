@@ -34,7 +34,7 @@ function balloonPrepareHead($object)
 	$langs->load("mymodule@flightballoon");
 
 	$head = new TabBar();
-	$head->addTab( new Tab($langs->trans("CardBalloon"), 'balloon',dol_buildpath("/flightballoon/balloon_card?id=".$object->id, 1)));
+	$head->addTab( new Tab($langs->trans("CardBalloon"), 'balloon',dol_buildpath("/flightballoon/balloon_card.php?id=".$object->id, 1)));
 
 	$tabs = $head->toArray();
 	complete_head_from_modules($conf, $langs, $object, $tabs, count($tabs), 'balloon');

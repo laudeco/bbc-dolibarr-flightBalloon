@@ -349,9 +349,36 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	print '<div class="fichehalfleft">';
 	print '<div class="underbanner clearboth"></div>';
 	print '<table class="border centpercent">'."\n";
-	// print '<tr><td class="fieldrequired">'.$langs->trans("Label").'</td><td>'.$object->label.'</td></tr>';
-	// LIST_OF_TD_LABEL_FIELDS_VIEW
 
+	// immatriculation
+    print '<tr>';
+    print sprintf('<td>%s</td>', 'Immat');
+    print sprintf('<td>%s</td>', $object->getImmatriculation());
+    print '</tr>';
+
+	// responsible
+    print '<tr>';
+    print sprintf('<td>%s</td>', 'marraine');
+    print sprintf('<td>%s</td>', $object->marraine);
+    print '</tr>';
+
+	// responsible
+    print '<tr>';
+    print sprintf('<td>%s</td>', 'Responsable');
+    print sprintf('<td>%s</td>', $object->getSecondResponsible()->getNomUrl(1));
+    print '</tr>';
+
+	// second-responsible
+    print '<tr>';
+    print sprintf('<td>%s</td>', 'Co-responsable');
+    print sprintf('<td>%s</td>', $object->getFirstResponsible()->getNomUrl(1));
+    print '</tr>';
+
+	// status
+    print '<tr>';
+    print sprintf('<td>%s</td>', 'Status');
+    print sprintf('<td>%s</td>', $object->getLibStatut());
+    print '</tr>';
 
 	// Other attributes
 	include DOL_DOCUMENT_ROOT . '/core/tpl/extrafields_view.tpl.php';

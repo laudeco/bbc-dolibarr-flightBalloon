@@ -70,6 +70,16 @@ class Bbc_ballons extends CommonObject
     public $table_element;
 
     /**
+     * @var User
+     */
+    private $firstResponsible;
+
+    /**
+     * @var User
+     */
+    private $secondResponsible;
+
+    /**
      * @param DoliDb $db Database handler
      */
     public function __construct(DoliDB $db)
@@ -216,6 +226,9 @@ class Bbc_ballons extends CommonObject
 				$this->init_heure = $obj->init_heure;
 				$this->is_disable = $obj->is_disable;
 				$this->picture = $obj->picture;
+
+				$this->firstResponsible = $this->fetchUser($this->fk_responsable);
+				$this->secondResponsible = $this->fetchUser($this->fk_co_responsable);
 
                 
             }
@@ -523,6 +536,51 @@ class Bbc_ballons extends CommonObject
     public function getTableName()
     {
         return $this->table_element;
+    }
+
+    /**
+     * @param string $fieldName
+	 *
+	 * @return mixed
+     */
+    public function get($fieldName)
+    {
+		return $this->{$fieldName};
+    }
+
+    /**
+     * @return User
+     */
+    public function getFirstResponsible()
+    {
+    	if(!$this->firstResponsible){
+    		$this->firstResponsible = $this->fetchUser($this->fk_responsable);
+		}
+        return $this->firstResponsible;
+    }
+
+    /**
+     * @return User
+     */
+    public function getSecondResponsible()
+    {
+    	if(!$this->secondResponsible){
+    		$this->secondResponsible = $this->fetchUser($this->fk_co_responsable);
+		}
+        return $this->secondResponsible;
+    }
+    
+    /**
+     * @param int $userId
+     *
+     * @return User
+     */
+    private function fetchUser($userId)
+    {
+        $user = new User($this->db);
+        $user->fetch($userId);
+
+        return $user;
     }
 
 }
