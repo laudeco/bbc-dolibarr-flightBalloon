@@ -2,6 +2,8 @@
 
 namespace Laudeco\Dolibarr\FlightBalloon\Domain\Balloon;
 
+use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\ValueObject\BalloonId;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\ValueObject\Immatriculation;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\AggregateRoot;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\AggregateRootInterface;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\ValueObject\Identity\IdentifiableInterface;
@@ -10,6 +12,9 @@ final class Balloon implements AggregateRootInterface
 {
 
     use AggregateRoot;
+
+    private BalloonId $id;
+    private Immatriculation $immat;
 
 /*`rowid` INT(11) NOT NULL,
 `immat` VARCHAR(10) NOT NULL,

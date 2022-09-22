@@ -2,7 +2,6 @@
 
 namespace Laudeco\Dolibarr\FlightBalloon\Domain\Common\ValueObject\Identity;
 
-use Laudeco\Dolibarr\FlightBalloon\Domain\Common\EqualsInterface;
 use Webmozart\Assert\Assert;
 
 final class Uuid implements IdentifiableInterface
@@ -18,7 +17,7 @@ final class Uuid implements IdentifiableInterface
         $this->value = $id;
     }
 
-    public static function fromString(string $id): IdentifiableInterface
+    public static function fromString(string $id)
     {
         return new self($id);
     }

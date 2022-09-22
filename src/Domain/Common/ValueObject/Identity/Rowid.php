@@ -20,7 +20,7 @@ final class Rowid implements IdentifiableInterface
     }
 
 
-    public static function fromString(string $id): IdentifiableInterface
+    public static function fromString(string $id): Rowid
     {
         return new self($id);
     }
