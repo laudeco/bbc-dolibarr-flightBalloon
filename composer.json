@@ -13,7 +13,8 @@
         "symfony/yaml": "^5.4",
         "symfony/dependency-injection": "^5.4",
         "symfony/twig-bridge": "^5.4",
-        "twig/twig": "^3.4"
+        "twig/twig": "^3.4",
+        "webmozart/assert": "^1.11"
     },
     "autoload": {
         "psr-4": {
