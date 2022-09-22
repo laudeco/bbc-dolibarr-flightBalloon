@@ -1,0 +1,23 @@
+{
+    "name": "laudeco/dolibarr-flight-balloon",
+    "authors": [
+        {
+            "name": "Laurent De Coninck",
+            "email": "lau.deconinck@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/http-kernel": "^5.4",
+        "symfony/routing": "^5.4",
+        "symfony/framework-bundle": "^5.4",
+        "symfony/yaml": "^5.4",
+        "symfony/dependency-injection": "^5.4",
+        "symfony/twig-bridge": "^5.4",
+        "twig/twig": "^3.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Laudeco\\Dolibarr\\FlightBalloon\\": "src/"
+        }
+    }
+}

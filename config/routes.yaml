@@ -1,0 +1,5 @@
+hello_world:
+  path: /hello/{name}
+  defaults:
+    name: world
+  controller: Laudeco\Dolibarr\FlightBalloon\Web\Http\Controller\HelloWorldController

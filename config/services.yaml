@@ -1,0 +1,15 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  Laudeco\Dolibarr\FlightBalloon\Web\Http\Controller\:
+    public: true
+    resource: '../src/Web/Http/Controller/**'
+
+  twig:
+    public: true
+    class: Twig\Environment
+    factory: ['Laudeco\Dolibarr\FlightBalloon\Infrastructure\Ui\Factory\TwigFactory', 'create']
+    arguments: ['%root_dir%']

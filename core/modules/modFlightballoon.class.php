@@ -54,7 +54,7 @@ class modFlightballoon extends DolibarrModules {
         $this->descriptionlong = "Manage balloon for the Belgian Balloon Club";
         $this->editor_name = 'De Coninck Laurent';
         $this->editor_url = 'http://www.dolibarr.org';
-        $this->version = '1.0';
+        $this->version = '2.0';
         $this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
         // Name of image file used for this module.
         // If file is in theme/yourtheme/img directory under name object_pictovalue.png, use this->picto='pictovalue'
