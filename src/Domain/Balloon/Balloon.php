@@ -78,7 +78,7 @@ final class Balloon implements AggregateRootInterface
             $this->immat,
             $this->model,
             $this->buyDate,
-            $this->flightTime->time(),
+            $this->flightTime->add($time),
             $this->weight,
             $this->marraine,
             $this->sponsored,
