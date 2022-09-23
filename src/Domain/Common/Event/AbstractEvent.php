@@ -28,5 +28,13 @@ abstract class AbstractEvent implements DomainEventInterface
         return $this->at;
     }
 
+    public function state(): array
+    {
+        return [
+            'id' => $this->id,
+            'at' => $this->at->format('Y-m-d H:i:s'),
+        ];
+    }
+
 
 }

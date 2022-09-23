@@ -6,7 +6,7 @@ namespace Laudeco\Dolibarr\FlightBalloon\Domain\Shared\ViewModel;
 
 use Webmozart\Assert\Assert;
 
-final class FlightHours
+final class FlightTime
 {
     private int $minutes;
 
@@ -40,9 +40,9 @@ final class FlightHours
         return new $this($this->minutes + $hours + $minutes);
     }
 
-    public function add(int $minutes): self
+    public function add(FlightTime $minutes): self
     {
-        return new $this($this->minutes + $minutes);
+        return new $this($this->minutes + $minutes->time());
     }
 
     public function time(): int

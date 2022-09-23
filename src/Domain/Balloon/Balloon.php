@@ -2,38 +2,60 @@
 
 namespace Laudeco\Dolibarr\FlightBalloon\Domain\Balloon;
 
+use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\Event\BalloonFlew;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\ValueObject\BalloonId;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\ValueObject\Immatriculation;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\ValueObject\MarraineName;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\ValueObject\Model;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\ValueObject\Sponsored;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\AggregateRoot;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\AggregateRootInterface;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\ValueObject\Identity\IdentifiableInterface;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Common\ValueObject\Identity\Uuid;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Manufacturer\ViewModel\ManufacturerId;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Shared\ViewModel\BuyDate;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Shared\ViewModel\Create;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Shared\ViewModel\FlightTime;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Shared\ViewModel\ReasonId;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Shared\ViewModel\Weight;
 
 final class Balloon implements AggregateRootInterface
 {
-
     use AggregateRoot;
 
     private BalloonId $id;
+    private Uuid $uuid;
+
     private Immatriculation $immat;
+    private Model $model;
+    private BuyDate $buyDate;
+    private FlightTime $flightTime;
+    private Weight $weight;
+    private MarraineName $marraine;
+    private Sponsored $sponsored;
+    private ReasonId $outReason;
+    private ManufacturerId $manufacturerId;
+    private Create $create;
 
-/*`rowid` INT(11) NOT NULL,
-`immat` VARCHAR(10) NOT NULL,
-`uuid` BINARY(16) NOT NULL,
-
-`model` VARCHAR(30),
-`buying_date` DATE NOT NULL DEFAULT '1999-01-01',
-`flight_hours` TIME DEFAULT '00:00:00',
-`weight` SMALLINT UNSIGNED DEFAULT 0,
-`marraine` VARCHAR(45),
-`sponsored` TINYINT(1) NOT NULL DEFAULT 0,
-`out_reason_id` INT(11),
-`manufacturer_id` INT(11) NOT NULL,
-`created_by` INT(11) NOT NULL,
-`created_at` DATETIME NOT NULL*/
+    private function __construct(BalloonId $id, Uuid $uuid, Immatriculation $immat, Model $model, BuyDate $buyDate, FlightTime $flightTime, Weight $weight, MarraineName $marraine, Sponsored $sponsored, ReasonId $outReason, ManufacturerId $manufacturerId, Create $create)
+    {
+        $this->id = $id;
+        $this->uuid = $uuid;
+        $this->immat = $immat;
+        $this->model = $model;
+        $this->buyDate = $buyDate;
+        $this->flightTime = $flightTime;
+        $this->weight = $weight;
+        $this->marraine = $marraine;
+        $this->sponsored = $sponsored;
+        $this->outReason = $outReason;
+        $this->manufacturerId = $manufacturerId;
+        $this->create = $create;
+    }
 
     public function id(): IdentifiableInterface
     {
-        // TODO: Implement id() method.
+        return $this->id;
     }
 
     public function fromState(array $state): AggregateRootInterface
@@ -43,11 +65,30 @@ final class Balloon implements AggregateRootInterface
 
     public function state(): array
     {
-        // TODO: Implement state() method.
+        return [
+
+        ];
     }
 
-    public function equals($other): bool
+    public function fly(FlightTime $time): self
     {
-        // TODO: Implement equals() method.
+        $balloon = new $this(
+            $this->id,
+            $this->uuid,
+            $this->immat,
+            $this->model,
+            $this->buyDate,
+            $this->flightTime->time(),
+            $this->weight,
+            $this->marraine,
+            $this->sponsored,
+            $this->outReason,
+            $this->manufacturerId,
+            $this->create
+        );
+
+        $this->recordThat(BalloonFlew::create($this->id));
+
+        return $balloon;
     }
 }

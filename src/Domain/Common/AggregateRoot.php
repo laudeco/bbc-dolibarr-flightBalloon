@@ -30,4 +30,10 @@ trait AggregateRoot
         $this->events = [];
     }
 
+    public function equals(AggregateRootInterface $other): bool
+    {
+        return get_class($this) === get_class($other)
+            && $this->id() === $other->id();
+    }
+
 }
