@@ -82,7 +82,7 @@
     `uuid` BINARY(16) NOT NULL,
     `model` VARCHAR(30),
     `buying_date` DATE NOT NULL DEFAULT '1999-01-01',
-    `flight_hours` TIME DEFAULT '00:00:00',
+    `flight_time` INT UNSIGNED DEFAULT 0 COMMENT 'Flight time in min',
     `weight` SMALLINT UNSIGNED DEFAULT 0,
     `marraine` VARCHAR(45),
     `sponsored` TINYINT(1) NOT NULL DEFAULT 0,
@@ -101,7 +101,7 @@
     `model` VARCHAR(30),
     `manufacturer_id` INT(11) NOT NULL,
     `buying_date` DATE NOT NULL DEFAULT '1999-01-01',
-    `flight_hours` TIME DEFAULT '00:00:00',
+    `flight_time` INT UNSIGNED DEFAULT 0 COMMENT 'Flight time in min',
     `comment` TEXT,
     `serial` VARCHAR(50),
     `weight` SMALLINT UNSIGNED DEFAULT 0,
@@ -121,7 +121,7 @@
     `model` VARCHAR(30),
     `buying_date` DATE NOT NULL DEFAULT '1999-01-01',
     `weight` SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-    `flight_hours` TIME DEFAULT '00:00:00',
+    `flight_time` INT UNSIGNED DEFAULT 0 COMMENT 'Flight time in min',
     `comment` TEXT,
     `name` VARCHAR(100),
     `easy_access` TINYINT(1) NOT NULL DEFAULT 0,
@@ -177,7 +177,7 @@
     `uuid` BINARY(16),
     `balloon_id` INT(11) NOT NULL,
     `burner_id` INT(11) NOT NULL,
-    `flight_hours` TIME DEFAULT '00:00:00',
+    `flight_time` INT UNSIGNED DEFAULT 0 COMMENT 'Flight time in min',
     `basket_id` INT(11) NOT NULL,
     `label` VARCHAR(100),
     `disabled_at` DATETIME,
@@ -207,14 +207,14 @@
     (2, (UNHEX(REPLACE(UUID(), "-",""))), 'Declasse', 'Materiel a ete declasse', 1, 'MATERIAL'),
     (3, (UNHEX(REPLACE(UUID(), "-",""))), 'Permie', 'Materiel perime', 1, 'MATERIAL');
 
-  INSERT INTO llx_bbc_balloons (rowid, immat, uuid, model, buying_date, flight_hours, weight, marraine, sponsored, out_reason_id, manufacturer_id, created_by, created_at)
+  INSERT INTO llx_bbc_balloons (rowid, immat, uuid, model, buying_date, flight_time, weight, marraine, sponsored, out_reason_id, manufacturer_id, created_by, created_at)
     SELECT
       bal.rowid as rowid,
       bal.immat as immat,
       (UNHEX(REPLACE(UUID(), "-",""))) as uuid,
       '' as model,
       IFNULL(bal.date, NOW()) as buying_date,
-      bal.init_heure as flight_hours,
+      0 as flight_time,
       0 as weight,
       IFNULL(bal.marraine, '') as marraine,
       1 as sponsored,
@@ -231,13 +231,13 @@
       bal.rowid
     FROM llx_bbc_balloons AS bal;
 
-  INSERT INTO llx_bbc_configurations (rowid, uuid, balloon_id, burner_id, flight_hours, basket_id, label, disabled_at, disabled_by, disabled_comment, created_at, created_by)
+  INSERT INTO llx_bbc_configurations (rowid, uuid, balloon_id, burner_id, flight_time, basket_id, label, disabled_at, disabled_by, disabled_comment, created_at, created_by)
     SELECT
       bal.rowid as rowid
       (UNHEX(REPLACE(UUID(), "-",""))) as uuid,
       bal.rowid as balloon_id,
       0 as burner_id,
-      bal.init_heure as flight_hours,
+      0 as flight_time,
       0 as basket_id,
       '' as label,
       IF(bal.is_disable = 1, NOW(), NULL) as disabled_at,
@@ -288,7 +288,7 @@
       config.rowid as rowid,
       balloon.immat as immat,
       balloon.marraine as marraine,
-      balloon.flight_hours as init_heure,
+      SEC_TO_TIME(balloon.flight_time*60) as init_heure,
       balloon.buying_date as date,
       NULL as picture,
       IF(config.disabled_at IS NULL, 0, 1) as is_disabled,

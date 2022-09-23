@@ -4,7 +4,7 @@
 namespace Laudeco\Dolibarr\FlightBalloon\Domain\Shared\ViewModel;
 
 
-class Weight
+final class Weight
 {
 
 }
