@@ -11,8 +11,9 @@ final class Rowid implements IdentifiableInterface
      */
     private $value;
 
-    public function __construct(string $value)
+    private function __construct(string $value)
     {
+        Assert::stringNotEmpty($value);
         Assert::integerish($value);
         Assert::greaterThan($value, 0);
 
@@ -25,9 +26,15 @@ final class Rowid implements IdentifiableInterface
         return new self($id);
     }
 
+
+    public static function fromInt(int $id): Rowid
+    {
+        return new self('' . $id);
+    }
+
     public function asString(): string
     {
-        return $this->value;
+        return '' . $this->value;
     }
 
     public function __toString(): string
@@ -38,5 +45,10 @@ final class Rowid implements IdentifiableInterface
     public function equals(IdentifiableInterface $other): bool
     {
         return $this->asString() === $other->asString();
+    }
+
+    public function asInt(): int
+    {
+        return $this->asInt();
     }
 }

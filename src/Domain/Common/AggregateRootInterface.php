@@ -9,7 +9,7 @@ interface AggregateRootInterface
 
     public function id(): IdentifiableInterface;
 
-    public function fromState(array $state): AggregateRootInterface;
+    public static function fromState(array $state): AggregateRootInterface;
 
     public function state(): array;
 

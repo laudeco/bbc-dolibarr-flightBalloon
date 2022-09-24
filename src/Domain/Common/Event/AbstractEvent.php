@@ -32,7 +32,7 @@ abstract class AbstractEvent implements DomainEventInterface
     {
         return [
             'id' => $this->id,
-            'at' => $this->at->format('Y-m-d H:i:s'),
+            'at' => $this->at->format(\DateTimeInterface::ISO8601),
         ];
     }
 

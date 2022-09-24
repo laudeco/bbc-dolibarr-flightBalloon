@@ -38,5 +38,13 @@ final class Create
         return $this->at;
     }
 
+    public function state(): array
+    {
+        return [
+            'author' => $this->author->asInt(),
+            'at' => $this->at->format(\DateTimeInterface::ISO8601),
+        ];
+    }
+
 
 }
