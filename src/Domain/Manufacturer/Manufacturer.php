@@ -9,6 +9,7 @@ use Laudeco\Dolibarr\FlightBalloon\Domain\Common\AggregateRootInterface;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\ValueObject\Identity\IdentifiableInterface;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\ValueObject\Identity\Rowid;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\ValueObject\Identity\Uuid;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Manufacturer\Event\ManufacturerCreated;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Manufacturer\ViewModel\ManufacturerId;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Manufacturer\ViewModel\ManufacturerName;
 
@@ -34,6 +35,8 @@ final class Manufacturer implements AggregateRootInterface
     public static function partener(ManufacturerId $id, Uuid $uuid, ManufacturerName $name, Rowid $supplier): self
     {
         $partener =  new self($id, $uuid, $name, $supplier);
+        $partener->recordThat(ManufacturerCreated::create($id));
+
         return $partener;
     }
 
