@@ -3,6 +3,7 @@
 namespace Laudeco\Dolibarr\FlightBalloon\Domain\Balloon;
 
 use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\Event\BalloonCreated;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\Event\BalloonDeprecated;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\Event\BalloonFlew;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\Event\BalloonFlightTimeCorrected;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Balloon\ValueObject\BalloonId;
@@ -41,19 +42,20 @@ final class Balloon implements AggregateRootInterface
     private Create $create;
 
     private function __construct(
-        BalloonId $id,
-        Uuid $uuid,
+        BalloonId       $id,
+        Uuid            $uuid,
         Immatriculation $immat,
-        Model $model,
-        BuyDate $buyDate,
-        FlightTime $flightTime,
-        Weight $weight,
-        MarraineName $marraine,
-        Sponsored $sponsored,
-        ReasonId $outReason,
-        ManufacturerId $manufacturerId,
-        Create $create
-    ) {
+        Model           $model,
+        BuyDate         $buyDate,
+        FlightTime      $flightTime,
+        Weight          $weight,
+        MarraineName    $marraine,
+        Sponsored       $sponsored,
+        ReasonId        $outReason,
+        ManufacturerId  $manufacturerId,
+        Create          $create
+    )
+    {
         $this->id = $id;
         $this->uuid = $uuid;
         $this->immat = $immat;
@@ -69,18 +71,19 @@ final class Balloon implements AggregateRootInterface
     }
 
     public static function buy(
-        BalloonId $id,
-        Uuid $uuid,
+        BalloonId       $id,
+        Uuid            $uuid,
         Immatriculation $immat,
-        Model $model,
-        BuyDate $buyDate,
-        FlightTime $flightTime,
-        Weight $weight,
-        MarraineName $marraine,
-        Sponsored $sponsored,
-        ManufacturerId $manufacturerId,
-        Rowid $author
-    ): self {
+        Model           $model,
+        BuyDate         $buyDate,
+        FlightTime      $flightTime,
+        Weight          $weight,
+        MarraineName    $marraine,
+        Sponsored       $sponsored,
+        ManufacturerId  $manufacturerId,
+        Rowid           $author
+    ): self
+    {
         $balloon = new self(
             $id,
             $uuid,
@@ -185,6 +188,28 @@ final class Balloon implements AggregateRootInterface
         );
 
         $this->recordThat(BalloonFlew::create($this->id));
+
+        return $balloon;
+    }
+
+    public function deprecate(ReasonId $reasonId): Balloon
+    {
+        $balloon = new $this(
+            $this->id,
+            $this->uuid,
+            $this->immat,
+            $this->model,
+            $this->buyDate,
+            $this->flightTime,
+            $this->weight,
+            $this->marraine,
+            $this->sponsored,
+            $reasonId,
+            $this->manufacturerId,
+            $this->create
+        );
+
+        $this->recordThat(BalloonDeprecated::create($this->id, $reasonId));
 
         return $balloon;
     }
