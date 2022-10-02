@@ -1,6 +1,7 @@
 <?php
 
 
+use Laudeco\Dolibarr\FlightBalloon\Infrastructure\Container\DolibarrConfParameterBag;
 use Symfony\Bundle\FrameworkBundle\Routing\DelegatingLoader;
 use Symfony\Component\Config\ConfigCache;
 use Symfony\Component\Config\FileLocator;
@@ -44,7 +45,7 @@ $file = __DIR__ . '/cache/ProjectServiceContainer.php';
 $containerConfigCache = new ConfigCache($file, true);
 if (!$containerConfigCache->isFresh()) {
 
-    $containerBuilder = new ContainerBuilder();
+    $containerBuilder = new ContainerBuilder(DolibarrConfParameterBag::fromConf($conf));
     $containerBuilder->setParameter('root_dir', __DIR__);
 
     $delegatingLoader = new \Symfony\Component\Config\Loader\DelegatingLoader(new LoaderResolver([
