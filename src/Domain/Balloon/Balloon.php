@@ -165,7 +165,7 @@ final class Balloon implements AggregateRootInterface
             $this->create
         );
 
-        $this->recordThat(BalloonFlightTimeCorrected::create($this->id));
+        $balloon->recordThat(BalloonFlightTimeCorrected::create($this->id));
 
         return $balloon;
     }
@@ -209,7 +209,7 @@ final class Balloon implements AggregateRootInterface
             $this->create
         );
 
-        $this->recordThat(BalloonDeprecated::create($this->id, $reasonId));
+        $balloon->recordThat(BalloonDeprecated::create($this->id, $reasonId));
 
         return $balloon;
     }

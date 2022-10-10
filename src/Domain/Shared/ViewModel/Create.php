@@ -41,7 +41,7 @@ final class Create
     public function state(): array
     {
         return [
-            'author' => $this->author->asInt(),
+            'creator' => $this->author->asInt(),
             'at' => $this->at->format(\DateTimeInterface::ISO8601),
         ];
     }

@@ -104,11 +104,38 @@ final class Tank implements AggregateRootInterface
 
     public static function fromState(array $state): AggregateRootInterface
     {
-        // TODO: Implement fromState() method.
+        return new self(
+            TankId::fromInt($state['id']),
+            Uuid::fromString($state['uuid']),
+            Serial::fromSerial($state['serial']),
+            BuyDate::fromString($state['buy_date']),
+            Capacity::fromLiter($state['capacity']),
+            ManufacturerId::fromString($state['manufacturer_id']),
+            Weight::fromInt($state['weight']),
+            InspectionDate::fromString($state['previous_inspection_date'], $state['next_inspection_date']),
+            ReasonId::fromInt($state['out_reason']),
+            Create::create(
+                Rowid::fromInt($state['creator']),
+                $state['created_at']
+            )
+        );
     }
 
     public function state(): array
     {
-        // TODO: Implement state() method.
+        return [
+            'id' => $this->id->asString(),
+            'uuid' => $this->uuid->asString(),
+            'buy_date' => $this->buyDate->asString(),
+            'weight' => $this->weight->asInt(),
+            'serial' => $this->serial->asString(),
+            'capacity' => $this->capacity->asLiter(),
+            'out_reason' => $this->outReason->asInt(),
+            'previous_inspection_date' => $this->inspectionDate->state()['previous'],
+            'next_inspection_date' => $this->inspectionDate->state()['next'],
+            'manufacturer_id' => $this->manufacturerId->asString(),
+            'creator' => $this->create->state()['creator'],
+            'created_at' => $this->create->state()['at'],
+        ];
     }
 }
