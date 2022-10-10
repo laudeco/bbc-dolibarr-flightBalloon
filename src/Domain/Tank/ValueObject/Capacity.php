@@ -15,12 +15,12 @@ final class Capacity
         $this->value = $value;
     }
 
-    public static function fromInt(int $value): self
+    public static function fromLiter(int $value): self
     {
         return new self($value);
     }
 
-    public function asInt():int{
+    public function asLiter():int{
         return $this->value;
     }
 
