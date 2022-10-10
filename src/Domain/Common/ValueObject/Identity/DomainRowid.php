@@ -13,12 +13,12 @@ trait DomainRowid
         $this->id = $id;
     }
 
-    public static function fromString(string $id): DomainRowid
+    public static function fromString(string $id): IdentifiableInterface
     {
         return new self(Rowid::fromString($id));
     }
 
-    public static function fromInt(int $id): DomainRowid
+    public static function fromInt(int $id): IdentifiableInterface
     {
         return new self(Rowid::fromInt($id));
     }
