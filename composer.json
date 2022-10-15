@@ -14,7 +14,8 @@
         "symfony/dependency-injection": "^5.4",
         "symfony/twig-bridge": "^5.4",
         "twig/twig": "^3.4",
-        "webmozart/assert": "^1.11"
+        "webmozart/assert": "^1.11",
+        "doctrine/dbal": "^3.4"
     },
     "autoload": {
         "psr-4": {

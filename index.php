@@ -47,6 +47,7 @@ if (!$containerConfigCache->isFresh()) {
 
     $containerBuilder = new ContainerBuilder(DolibarrConfParameterBag::fromConf($conf));
     $containerBuilder->setParameter('root_dir', __DIR__);
+    $containerBuilder->setParameter('db.pass', $dolibarr_main_db_pass);
 
     $delegatingLoader = new \Symfony\Component\Config\Loader\DelegatingLoader(new LoaderResolver([
         new \Symfony\Component\DependencyInjection\Loader\YamlFileLoader($containerBuilder, $configFiles),
