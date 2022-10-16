@@ -42,20 +42,19 @@ final class Balloon implements AggregateRootInterface
     private Create $create;
 
     private function __construct(
-        BalloonId       $id,
-        Uuid            $uuid,
+        BalloonId $id,
+        Uuid $uuid,
         Immatriculation $immat,
-        Model           $model,
-        BuyDate         $buyDate,
-        FlightTime      $flightTime,
-        Weight          $weight,
-        MarraineName    $marraine,
-        Sponsored       $sponsored,
-        ReasonId        $outReason,
-        ManufacturerId  $manufacturerId,
-        Create          $create
-    )
-    {
+        Model $model,
+        BuyDate $buyDate,
+        FlightTime $flightTime,
+        Weight $weight,
+        MarraineName $marraine,
+        Sponsored $sponsored,
+        ReasonId $outReason,
+        ManufacturerId $manufacturerId,
+        Create $create
+    ) {
         $this->id = $id;
         $this->uuid = $uuid;
         $this->immat = $immat;
@@ -71,19 +70,18 @@ final class Balloon implements AggregateRootInterface
     }
 
     public static function buy(
-        BalloonId       $id,
-        Uuid            $uuid,
+        BalloonId $id,
+        Uuid $uuid,
         Immatriculation $immat,
-        Model           $model,
-        BuyDate         $buyDate,
-        FlightTime      $flightTime,
-        Weight          $weight,
-        MarraineName    $marraine,
-        Sponsored       $sponsored,
-        ManufacturerId  $manufacturerId,
-        Rowid           $author
-    ): self
-    {
+        Model $model,
+        BuyDate $buyDate,
+        FlightTime $flightTime,
+        Weight $weight,
+        MarraineName $marraine,
+        Sponsored $sponsored,
+        ManufacturerId $manufacturerId,
+        Rowid $author
+    ): self {
         $balloon = new self(
             $id,
             $uuid,
@@ -125,7 +123,7 @@ final class Balloon implements AggregateRootInterface
             Create::create(
                 Rowid::fromInt($state['creator']),
                 $state['created_at']
-            ),
+            )
         );
     }
 
@@ -142,7 +140,7 @@ final class Balloon implements AggregateRootInterface
             'marraine' => $this->marraine->asString(),
             'sponsored' => $this->sponsored->asInt(),
             'out_reason' => $this->outReason->asInt(),
-            'manufacturer_id' => $this->manufacturerId->asString(),
+            'manufacturer_id' => $this->manufacturerId->asInt(),
             'creator' => $this->create->state()['creator'],
             'created_at' => $this->create->state()['at'],
         ];

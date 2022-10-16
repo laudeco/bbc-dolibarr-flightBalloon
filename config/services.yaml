@@ -13,3 +13,9 @@ services:
     class: Twig\Environment
     factory: ['Laudeco\Dolibarr\FlightBalloon\Infrastructure\Ui\Factory\TwigFactory', 'create']
     arguments: ['%root_dir%']
+
+  Doctrine\DBAL\Connection:
+    public: true
+    class: Doctrine\DBAL\Connection
+    factory: ['Laudeco\Dolibarr\FlightBalloon\Infrastructure\Database\Factory\ConnectionFactory', 'create']
+    arguments: ['%db.name%', '%db.user%', '%db.pass%', '%db.host%', '%db.port%']

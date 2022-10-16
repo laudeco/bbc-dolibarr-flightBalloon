@@ -4,6 +4,8 @@
 namespace Laudeco\Dolibarr\FlightBalloon\Domain\Basket;
 
 
+use Laudeco\Dolibarr\FlightBalloon\Domain\Basket\Event\BasketEasyAccessCreated;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Basket\Event\NormalBasketCreated;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Basket\ValueObject\BasketId;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Basket\ValueObject\BasketSerialNumber;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Basket\ValueObject\Comment;
@@ -13,6 +15,7 @@ use Laudeco\Dolibarr\FlightBalloon\Domain\Basket\ValueObject\Name;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\AggregateRoot;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\AggregateRootInterface;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\ValueObject\Identity\IdentifiableInterface;
+use Laudeco\Dolibarr\FlightBalloon\Domain\Common\ValueObject\Identity\Rowid;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Common\ValueObject\Identity\Uuid;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Manufacturer\ViewModel\ManufacturerId;
 use Laudeco\Dolibarr\FlightBalloon\Domain\Shared\ViewModel\BuyDate;
@@ -84,7 +87,7 @@ final class Basket implements AggregateRootInterface
         ManufacturerId $manufacturerId,
         Create $create
     ): self {
-        return new self(
+        $basket = new self(
             $id,
             $uuid,
             $serialNumber,
@@ -99,6 +102,10 @@ final class Basket implements AggregateRootInterface
             $manufacturerId,
             $create
         );
+
+        $basket->recordThat(BasketEasyAccessCreated::create($id));
+
+        return $basket;
     }
 
     public static function normal(
@@ -115,7 +122,7 @@ final class Basket implements AggregateRootInterface
         ManufacturerId $manufacturerId,
         Create $create
     ): self {
-        return new self(
+        $basket = new self(
             $id,
             $uuid,
             $serialNumber,
@@ -130,6 +137,10 @@ final class Basket implements AggregateRootInterface
             $manufacturerId,
             $create
         );
+
+        $basket->recordThat(NormalBasketCreated::create($id));
+
+        return $basket;
     }
 
 
@@ -140,11 +151,40 @@ final class Basket implements AggregateRootInterface
 
     public static function fromState(array $state): AggregateRootInterface
     {
-        // TODO: Implement fromState() method.
+        return new self(
+            BasketId::fromInt($state['id']),
+            Uuid::fromString($state['uuid']),
+            BasketSerialNumber::fromString($state['serial_number']),
+            Model::fromString($state['model']),
+            BuyDate::fromString($state['buying_date']),
+            Weight::fromInt($state['weight']),
+            FlightTime::fromInt($state['flight_time']),
+            Comment::fromString($state['comment']),
+            Name::fromString($state['name']),
+            EasyAccess::fromInt($state['easy_access']),
+            ReasonId::fromInt($state['out_reason']),
+            ManufacturerId::fromInt($state['manufacturer_id']),
+            Create::create(Rowid::fromInt($state['creator']), $state['created_at'])
+        );
     }
 
     public function state(): array
     {
-        // TODO: Implement state() method.
+        return [
+            'id' => $this->id->asInt(),
+            'uuid' => $this->uuid->asString(),
+            'serial_number' => $this->serialNumber->asString(),
+            'model' => $this->model->asString(),
+            'buying_date' => $this->buyingDate->asString(),
+            'weight' => $this->weight->asInt(),
+            'flight_time' => $this->flightTime->time(),
+            'comment' => $this->comment->asString(),
+            'name' => $this->name->asString(),
+            'easy_access' => $this->easyAccess->asInt(),
+            'out_reason' => $this->reason->asInt(),
+            'manufacturer_id' => $this->manufacturerId->asInt(),
+            'creator' => $this->create->state()['creator'],
+            'created_at' => $this->create->state()['at'],
+        ];
     }
 }
