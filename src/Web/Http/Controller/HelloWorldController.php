@@ -16,7 +16,6 @@ final class HelloWorldController extends AbstractController
     {
         return $this->render('helloWorld/try.html.twig', [
             'name' => $name,
-            'balloons' => $res->fetchAll(),
         ]);
     }
 
